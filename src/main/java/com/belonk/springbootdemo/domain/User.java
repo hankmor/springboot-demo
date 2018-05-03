@@ -1,26 +1,19 @@
-package com.belonk.springbootdemo.controller;
+package com.belonk.springbootdemo.domain;
 
-import com.belonk.springbootdemo.domain.Blog;
-import com.belonk.springbootdemo.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
+ * 参数绑定测试。
+ *
  * Created by sun on 2018/5/3.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@RestController
-public class DemoController {
+@Component
+public class User {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -29,7 +22,7 @@ public class DemoController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(DemoController.class);
+    
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,10 +32,10 @@ public class DemoController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private User user;
-    @Autowired
-    private Blog blog;
+    @Value("${user.name}")
+    private String userName;
+    @Value("${user.department}")
+    private String department;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,7 +45,13 @@ public class DemoController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    public User() {
+    }
 
+    public User(String userName, String dept) {
+        this.userName = userName;
+        this.department = dept;
+    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,23 +61,25 @@ public class DemoController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @RequestMapping("/hello")
-    public String hello() {
-        return "Hello World!";
+    public String getUserName() {
+        return userName;
     }
 
-    @GetMapping("/users")
-    public List<User> user() {
-        List<User> users = new ArrayList<>();
-        users.add(user);
-        user = new User("zhangsan", "op");
-        users.add(user);
-        return users;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    @GetMapping("/blog")
-    public Blog blog() {
-        return blog;
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    @Override
+    public String toString() {
+        return "userName: " + userName + ", department: " + department;
     }
 
     /*
