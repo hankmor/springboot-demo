@@ -1,7 +1,7 @@
-package com.belonk.springbootdemo.controller;
+package com.belonk.controller;
 
-import com.belonk.springbootdemo.domain.Blog;
-import com.belonk.springbootdemo.domain.User;
+import com.belonk.domain.User;
+import com.belonk.domain.Blog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.util.List;
  * @since 1.0
  */
 @RestController
+@RequestMapping("/demo")
 public class DemoController {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

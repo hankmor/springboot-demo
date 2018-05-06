@@ -1,6 +1,6 @@
-package com.belonk.springbootdemo;
+package com.belonk.test.controller;
 
-import com.belonk.springbootdemo.controller.DemoController;
+import com.belonk.controller.DemoController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
