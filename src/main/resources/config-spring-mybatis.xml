@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${spring.datasource.driverClassName}"/>
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${spring.datasource.url}"/>
+        <property name="username" value="${spring.datasource.username}"/>
+        <property name="password" value="${spring.datasource.password}"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${spring.datasource.initialSize}"/>
+        <property name="minIdle" value="${spring.datasource.minIdle}"/>
+        <property name="maxActive" value="${spring.datasource.maxActive}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${spring.datasource.maxWait}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${spring.datasource.timeBetweenEvictionRunsMillis}"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${spring.datasource.minEvictableIdleTimeMillis}"/>
+        <!-- 生成druid监控日志 -->
+        <property name="validationQuery" value="${spring.datasource.validationQuery}"/>
+        <property name="testWhileIdle" value="${spring.datasource.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${spring.datasource.testOnBorrow}"/>
+        <property name="testOnReturn" value="${spring.datasource.testOnReturn}"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="${spring.datasource.poolPreparedStatements}"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize"
+                  value="${spring.datasource.maxPoolPreparedStatementPerConnectionSize}"/>
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="${spring.datasource.filters}"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:mappers/**/*.xml"/>
+    </bean>
+
+    <!-- 扫描数据访问层，组装数据访问接口实现类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.belonk.**.mapper"/>
+    </bean>
+
+    <!--事务配置-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 事务声明 -->
+    <aop:config proxy-target-class="true">
+        <aop:advisor advice-ref="txAdvice" pointcut="within(com.belonk..impl.*Impl) &amp;&amp; execution(* *(..))"/>
+    </aop:config>
+    <!-- 通用事务通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="do*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置Druid和Spring关联监控配置-->
+    <bean id="druidStatInterceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor"/>
+    <bean id="druidStatPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut"
+          scope="prototype">
+        <property name="patterns">
+            <list>
+                <value>com.belonk.*.service.*</value>
+                <value>com.belonk.*.mapper.*</value>
+            </list>
+        </property>
+    </bean>
+    <aop:config>
+        <aop:advisor advice-ref="druidStatInterceptor" pointcut-ref="druidStatPointcut"/>
+    </aop:config>
+</beans>

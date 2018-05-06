@@ -1,19 +1,24 @@
-package com.belonk.springbootdemo.domain;
+package com.belonk.controller;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import com.belonk.domain.TestUser;
+import com.belonk.service.TestUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
- * 参数绑定测试。
- *
- * Created by sun on 2018/5/3.
+ * Created by sun on 2018/5/6.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@Component
-public class User {
+@RestController
+@RequestMapping("/user")
+public class TestUserController {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -22,7 +27,7 @@ public class User {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    
+    private static Logger log = LoggerFactory.getLogger(TestUserController.class);
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,10 +37,8 @@ public class User {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Value("${user.name}")
-    private String userName;
-    @Value("${user.department}")
-    private String department;
+    @Autowired
+    private TestUserService testUserService;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,13 +48,7 @@ public class User {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public User() {
-    }
 
-    public User(String userName, String dept) {
-        this.userName = userName;
-        this.department = dept;
-    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,25 +58,42 @@ public class User {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public String getUserName() {
-        return userName;
+    @GetMapping("/{id}")
+    public TestUser get(@PathVariable("id") Long id) {
+        return testUserService.getById(id);
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    @PutMapping
+    public TestUser insert(TestUser testUser) {
+        testUserService.insert(testUser);
+        return testUser;
     }
 
-    public String getDepartment() {
-        return department;
+    @PostMapping("/{id}")
+    public TestUser update(@PathVariable Long id, TestUser testUser) {
+        if (id == null) {
+            throw new IllegalArgumentException();
+        }
+        if (testUser.getId() != null && !id.equals(testUser.getId())) {
+            throw new IllegalArgumentException();
+        }
+        TestUser old = testUserService.getById(id);
+        if (old == null) {
+            throw new NullPointerException();
+        }
+        testUser.setId(id);
+        testUserService.update(testUser);
+        return old;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        testUserService.deleteById(id);
     }
 
-    @Override
-    public String toString() {
-        return "userName: " + userName + ", department: " + department;
+    @GetMapping("/_all")
+    public List<TestUser> findAll() {
+        return testUserService.findAll();
     }
 
     /*
