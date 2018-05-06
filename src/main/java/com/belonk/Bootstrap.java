@@ -1,5 +1,6 @@
 package com.belonk;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,6 +29,7 @@ public class Bootstrap {
     @Bean
     public HttpMessageConverters customConverters() {
         FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+//        converter.setFeatures(SerializerFeature.WriteMapNullValue);
         return new HttpMessageConverters(converter);
     }
 }
