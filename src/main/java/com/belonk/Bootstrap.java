@@ -29,7 +29,10 @@ public class Bootstrap {
     @Bean
     public HttpMessageConverters customConverters() {
         FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-//        converter.setFeatures(SerializerFeature.WriteMapNullValue);
+        // JSON包含null字段
+        // converter.setFeatures(SerializerFeature.WriteMapNullValue);
+        // JSON格式化输出
+        // converter.setFeatures(SerializerFeature.PrettyFormat);
         return new HttpMessageConverters(converter);
     }
 }
