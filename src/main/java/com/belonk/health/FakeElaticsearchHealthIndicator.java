@@ -1,27 +1,24 @@
-package com.belonk.controller;
+package com.belonk.health;
 
-import com.belonk.domain.User;
-import com.belonk.domain.Blog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 /**
- * Created by sun on 2018/5/3.
+ * 模拟的自定义es健康检查。
+ * <p>
+ * Created by sun on 2018/5/9.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@RestController
-@RequestMapping("/demo")
-public class DemoController {
+@Component
+public class FakeElaticsearchHealthIndicator implements HealthIndicator {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -30,7 +27,8 @@ public class DemoController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(DemoController.class);
+    private static Logger log = LoggerFactory.getLogger(FakeElaticsearchHealthIndicator.class);
+    private static Random random = new Random();
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,10 +38,6 @@ public class DemoController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private User user;
-    @Autowired
-    private Blog blog;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -63,26 +57,30 @@ public class DemoController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @RequestMapping("/hello")
-    public String hello() {
-
-        return "Hello World!";
+    /**
+     * 访问/health，可以看到自定义健康识别指标：
+     * <p>
+     * "fakeElaticsearch": {
+     * "details": {
+     * "errorCode": 76
+     * },
+     * "status": {
+     * "code": "DOWN",
+     * "description": ""
+     * }
+     * }
+     *
+     * @return
+     */
+    @Override
+    public Health health() {
+        int errCode = check();
+        if (errCode != 0) {
+            return Health.down().withDetail("errorCode", errCode).build();
+        }
+        return Health.up().build();
     }
-
-    @GetMapping("/users")
-    public List<User> user() {
-        List<User> users = new ArrayList<>();
-        users.add(user);
-        user = new User("zhangsan", "op");
-        users.add(user);
-        return users;
-    }
-
-    @GetMapping("/blog")
-    public Blog blog() {
-        return blog;
-    }
-
+    
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -91,5 +89,7 @@ public class DemoController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    private int check() {
+        return random.nextInt(100);
+    }
 }
