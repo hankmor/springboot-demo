@@ -7,7 +7,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>01-helloworld</module>
-        <module>08-druid-mybatis-fastjson</module>
+        <module>09-druid-mybatis-fastjson</module>
+        <module>02-configuration</module>
+        <module>10-template-engine-thymeleaf</module>
     </modules>
     <packaging>pom</packaging>
     <name>springboot-demo</name>
