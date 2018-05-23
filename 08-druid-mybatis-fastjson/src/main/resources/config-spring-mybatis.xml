@@ -38,7 +38,7 @@
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="mapperLocations" value="classpath*:mappers/**/*.xml"/>
+        <property name="mapperLocations" value="classpath*:src/test/java/mappers/**/*.xml"/>
     </bean>
 
     <!-- 扫描数据访问层，组装数据访问接口实现类 -->

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ImportResource({"classpath:config-*.xml"})
+@ImportResource({"config-spring-mybatis.xml"})
 public class Bootstrap {
 
     public static void main(String[] args) {
