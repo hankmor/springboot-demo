@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.belonk.mapper.TestUserMapper">
-    <resultMap id="BaseResultMap" type="com.belonk.domain.TestUser">
+    <resultMap id="BaseResultMap" type="com.belonk.com.belonk.domain.TestUser">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="age" property="age" jdbcType="INTEGER"/>
@@ -20,7 +20,7 @@
     delete from t_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.belonk.domain.TestUser">
+    <insert id="insert" parameterType="com.belonk.com.belonk.domain.TestUser">
         <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -29,7 +29,7 @@
         values (#{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
         )
     </insert>
-    <insert id="insertSelective" parameterType="com.belonk.domain.TestUser">
+    <insert id="insertSelective" parameterType="com.belonk.com.belonk.domain.TestUser">
         <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -57,7 +57,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.belonk.domain.TestUser">
+    <update id="updateByPrimaryKeySelective" parameterType="com.belonk.com.belonk.domain.TestUser">
         update t_user
         <set>
             <if test="name != null">
@@ -72,7 +72,7 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.belonk.domain.TestUser">
+    <update id="updateByPrimaryKey" parameterType="com.belonk.com.belonk.domain.TestUser">
     update t_user
     set name = #{name,jdbcType=VARCHAR},
       age = #{age,jdbcType=INTEGER},
