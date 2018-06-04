@@ -10,6 +10,7 @@
         <module>09-druid-mybatis-fastjson</module>
         <module>02-configuration</module>
         <module>10-template-engine-thymeleaf</module>
+        <module>03-spring-data-jpa</module>
     </modules>
     <packaging>pom</packaging>
     <name>springboot-demo</name>
