@@ -11,6 +11,7 @@
         <module>02-configuration</module>
         <module>10-template-engine-thymeleaf</module>
         <module>03-spring-data-jpa</module>
+        <module>04-shiro</module>
     </modules>
     <packaging>pom</packaging>
     <name>springboot-demo</name>
