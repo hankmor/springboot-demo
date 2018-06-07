@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>10-template-engine-thymeleaf</artifactId>
+    <artifactId>05-template-engine-thymeleaf</artifactId>
 
     <dependencies>
         <dependency>
