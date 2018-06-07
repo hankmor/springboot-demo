@@ -1,24 +1,20 @@
-package com.belonk.controller;
+package com.belonk.web;
 
-import com.belonk.domain.TestUser;
-import com.belonk.service.TestUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Created by sun on 2018/5/6.
+ * Created by sun on 2018/5/23.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@RestController
-@RequestMapping("/user")
-public class TestUserController {
+@Controller
+@RequestMapping
+public class DemoController {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -27,7 +23,7 @@ public class TestUserController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(TestUserController.class);
+    private static Logger log = LoggerFactory.getLogger(DemoController.class);
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,8 +33,7 @@ public class TestUserController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private TestUserService testUserService;
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,44 +53,16 @@ public class TestUserController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @GetMapping("/{id}")
-    public TestUser get(@PathVariable("id") Long id) {
-        return testUserService.getById(id);
+    @RequestMapping("/")
+    public String index() {
+        return "index";
     }
 
-    @PutMapping
-    public TestUser insert(TestUser testUser) {
-        testUserService.insert(testUser);
-        return testUser;
+    @RequestMapping("/demo")
+    public String demo() {
+        return "module/test";
     }
-
-    @PostMapping("/{id}")
-    public TestUser update(@PathVariable Long id, TestUser testUser) {
-        if (id == null) {
-            throw new IllegalArgumentException();
-        }
-        if (testUser.getId() != null && !id.equals(testUser.getId())) {
-            throw new IllegalArgumentException();
-        }
-        TestUser old = testUserService.getById(id);
-        if (old == null) {
-            throw new NullPointerException();
-        }
-        testUser.setId(id);
-        testUserService.update(testUser);
-        return old;
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        testUserService.deleteById(id);
-    }
-
-    @GetMapping("/_all")
-    public List<TestUser> findAll() {
-        return testUserService.findAll();
-    }
-
+    
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *

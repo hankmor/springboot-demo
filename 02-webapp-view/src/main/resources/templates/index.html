@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Demo</title>
+</head>
+<body>
+<h1 th:text="|Hello, ${msg}|">Hello Spring boot!</h1>
+<br/>
+<h2>自定义参数</h2>
+<div>
+    <label>name:</label>
+    <span th:text="${customParam.name}"></span>
+</div>
+<div>
+    <label>department:</label>
+    <span th:text="${customParam.department}"></span>
+</div>
+<br/>
+<h2>随机数参数</h2>
+<div><label>blogId:</label><span th:text="${randomParam.blogId}"></span></div>
+<div><label>sign:</label><span th:text="${randomParam.sign}"></span></div>
+<div><label>articleNumber:</label><span th:text="${randomParam.articleNumber}"></span></div>
+<div><label>articleSize:</label><span th:text="${randomParam.articleSize}"></span></div>
+<div><label>visitNumber:</label><span th:text="${randomParam.visitNumber}"></span></div>
+<div><label>commentNumber:</label><span th:text="${randomParam.commentNumber}"></span></div>
+</body>
+</html>

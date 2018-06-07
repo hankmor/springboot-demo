@@ -7,11 +7,11 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>01-helloworld</module>
-        <module>09-druid-mybatis-fastjson</module>
-        <module>02-configuration</module>
-        <module>10-template-engine-thymeleaf</module>
+        <module>02-webapp-view</module>
         <module>03-spring-data-jpa</module>
         <module>04-shiro</module>
+        <module>05-template-engine-thymeleaf</module>
+        <module>09-druid-mybatis-fastjson</module>
     </modules>
     <packaging>pom</packaging>
     <name>springboot-demo</name>
@@ -27,4 +27,13 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
