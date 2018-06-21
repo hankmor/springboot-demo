@@ -1,6 +1,6 @@
 package com.belonk.mapper;
 
-import com.belonk.domain.TestUser;
+import com.belonk.entity.TestUser;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
