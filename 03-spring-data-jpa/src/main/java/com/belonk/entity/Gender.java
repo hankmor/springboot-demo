@@ -1,4 +1,4 @@
-package com.belonk.domain;
+package com.belonk.entity;
 
 public enum Gender {
     MALE, FEMALE;

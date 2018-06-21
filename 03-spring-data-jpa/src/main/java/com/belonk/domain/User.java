@@ -1,24 +1,21 @@
-package com.belonk.service.impl;
+package com.belonk.domain;
 
-import com.belonk.entity.TestUser;
-import com.belonk.mapper.TestUserMapper;
-import com.belonk.service.TestUserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.belonk.entity.Employee;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Created by sun on 2018/5/6.
+ * Created by sun on 2018/6/21.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@Service
-public class TestUserServiceImpl implements TestUserService {
+@Data
+@EqualsAndHashCode
+@ToString
+public class User {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -27,7 +24,7 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(TestUserServiceImpl.class);
+    
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,8 +34,8 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private TestUserMapper testUserMapper;
+    private Long id;
+    private String name;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,7 +45,13 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    public User() {
+    }
 
+    public User(Employee employee) {
+        this.id = employee.getId();
+        this.name = employee.getName();
+    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,31 +60,8 @@ public class TestUserServiceImpl implements TestUserService {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    @Override
-    public TestUser getById(Long id) {
-        return testUserMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    public void insert(TestUser testUser) {
-        testUserMapper.insertSelective(testUser);
-    }
-
-    @Override
-    public void update(TestUser testUser) {
-        testUserMapper.updateByPrimaryKeySelective(testUser);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        testUserMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public List<TestUser> findAll() {
-        return testUserMapper.selectAll();
-    }
+    
+    
     
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

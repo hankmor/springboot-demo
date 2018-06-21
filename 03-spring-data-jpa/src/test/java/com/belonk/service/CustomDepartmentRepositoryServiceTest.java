@@ -1,24 +1,22 @@
-package com.belonk.service.impl;
+package com.belonk.service;
 
-import com.belonk.entity.TestUser;
-import com.belonk.mapper.TestUserMapper;
-import com.belonk.service.TestUserService;
+import com.belonk.BaseTest;
+import com.belonk.entity.Department;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
- * Created by sun on 2018/5/6.
+ * Created by sun on 2018/6/19.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@Service
-public class TestUserServiceImpl implements TestUserService {
+
+public class CustomDepartmentRepositoryServiceTest extends BaseTest {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -27,7 +25,7 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(TestUserServiceImpl.class);
+    private static Logger log = LoggerFactory.getLogger(CustomDepartmentRepositoryServiceTest.class);
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +36,7 @@ public class TestUserServiceImpl implements TestUserService {
      */
 
     @Autowired
-    private TestUserMapper testUserMapper;
+    private CustomDepartmentService customDepartmentService;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,29 +56,21 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Override
-    public TestUser getById(Long id) {
-        return testUserMapper.selectByPrimaryKey(id);
+    @Test
+    public void testSave() {
+        Department department = new Department();
+        department.setName("技术部");
+        Department savedDepartment = customDepartmentService.save(department);
+        Long generatedId = savedDepartment.getId();
+        log.debug("Generate id : " + generatedId);
+        Assert.assertTrue(generatedId != null);
     }
 
-    @Override
-    public void insert(TestUser testUser) {
-        testUserMapper.insertSelective(testUser);
-    }
-
-    @Override
-    public void update(TestUser testUser) {
-        testUserMapper.updateByPrimaryKeySelective(testUser);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        testUserMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public List<TestUser> findAll() {
-        return testUserMapper.selectAll();
+    @Test
+    public void testGet() {
+        Department department = customDepartmentService.getById(1L);
+        log.debug("Department : " + department);
+        Assert.assertTrue(department != null);
     }
     
     /*

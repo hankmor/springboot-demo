@@ -1,24 +1,21 @@
-package com.belonk.service.impl;
+package com.belonk.common.util;
 
-import com.belonk.entity.TestUser;
-import com.belonk.mapper.TestUserMapper;
-import com.belonk.service.TestUserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.io.IOException;
 
 /**
- * Created by sun on 2018/5/6.
+ * Created by sun on 2018/5/30.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@Service
-public class TestUserServiceImpl implements TestUserService {
+public class JsonUtil {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -27,7 +24,8 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(TestUserServiceImpl.class);
+    private static Logger log = LoggerFactory.getLogger(JsonUtil.class);
+    private static ObjectMapper om = new ObjectMapper();
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,8 +35,7 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private TestUserMapper testUserMapper;
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,7 +45,8 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    private JsonUtil() {
+    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,31 +56,33 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Override
-    public TestUser getById(Long id) {
-        return testUserMapper.selectByPrimaryKey(id);
+    public static <T> String toJson(T t) {
+        try {
+            return om.writeValueAsString(t);
+        } catch (JsonProcessingException e) {
+            log.error("Convert object to json failed : ", e);
+        }
+        return null;
     }
 
-    @Override
-    public void insert(TestUser testUser) {
-        testUserMapper.insertSelective(testUser);
+    public static <T> T fromJson(String json, Class<T> clazz) {
+        try {
+            return om.readValue(json, clazz);
+        } catch (IOException e) {
+            log.error("Convert json to object failed : ", e);
+        }
+        return null;
     }
 
-    @Override
-    public void update(TestUser testUser) {
-        testUserMapper.updateByPrimaryKeySelective(testUser);
+    public static <T> T fromJson(String json, TypeReference<T> typeReference) {
+        try {
+            return om.readValue(json, typeReference);
+        } catch (IOException e) {
+            log.error("Convert json to object failed : ", e);
+        }
+        return null;
     }
 
-    @Override
-    public void deleteById(Long id) {
-        testUserMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public List<TestUser> findAll() {
-        return testUserMapper.selectAll();
-    }
-    
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
