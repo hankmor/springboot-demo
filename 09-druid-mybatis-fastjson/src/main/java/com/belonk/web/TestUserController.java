@@ -1,6 +1,6 @@
 package com.belonk.web;
 
-import com.belonk.domain.TestUser;
+import com.belonk.entity.TestUser;
 import com.belonk.service.TestUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

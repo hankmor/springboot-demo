@@ -1,24 +1,19 @@
-package com.belonk.service.impl;
+package com.belonk;
 
-import com.belonk.entity.TestUser;
-import com.belonk.mapper.TestUserMapper;
-import com.belonk.service.TestUserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Created by sun on 2018/5/6.
+ * Created by sun on 2018/6/19.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@Service
-public class TestUserServiceImpl implements TestUserService {
+@SpringBootTest
+@RunWith(SpringRunner.class)
+public class BaseTest {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -27,7 +22,7 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(TestUserServiceImpl.class);
+    
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,8 +32,7 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private TestUserMapper testUserMapper;
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,31 +51,8 @@ public class TestUserServiceImpl implements TestUserService {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    @Override
-    public TestUser getById(Long id) {
-        return testUserMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    public void insert(TestUser testUser) {
-        testUserMapper.insertSelective(testUser);
-    }
-
-    @Override
-    public void update(TestUser testUser) {
-        testUserMapper.updateByPrimaryKeySelective(testUser);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        testUserMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public List<TestUser> findAll() {
-        return testUserMapper.selectAll();
-    }
+    
+    
     
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

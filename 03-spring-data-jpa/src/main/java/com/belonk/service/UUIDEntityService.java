@@ -1,24 +1,21 @@
-package com.belonk.service.impl;
+package com.belonk.service;
 
-import com.belonk.entity.TestUser;
-import com.belonk.mapper.TestUserMapper;
-import com.belonk.service.TestUserService;
+import com.belonk.dao.UUIDEntityDao;
+import com.belonk.entity.UUIDEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
- * Created by sun on 2018/5/6.
+ * Created by sun on 2018/6/21.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
 @Service
-public class TestUserServiceImpl implements TestUserService {
+public class UUIDEntityService {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -27,7 +24,7 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(TestUserServiceImpl.class);
+    private static Logger log = LoggerFactory.getLogger(UUIDEntityService.class);
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +35,7 @@ public class TestUserServiceImpl implements TestUserService {
      */
 
     @Autowired
-    private TestUserMapper testUserMapper;
+    private UUIDEntityDao uuidEntityDao;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,31 +55,10 @@ public class TestUserServiceImpl implements TestUserService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Override
-    public TestUser getById(Long id) {
-        return testUserMapper.selectByPrimaryKey(id);
+    public UUIDEntity save(UUIDEntity uuidEntity) {
+        return uuidEntityDao.save(uuidEntity);
     }
 
-    @Override
-    public void insert(TestUser testUser) {
-        testUserMapper.insertSelective(testUser);
-    }
-
-    @Override
-    public void update(TestUser testUser) {
-        testUserMapper.updateByPrimaryKeySelective(testUser);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        testUserMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public List<TestUser> findAll() {
-        return testUserMapper.selectAll();
-    }
-    
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
