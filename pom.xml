@@ -12,6 +12,7 @@
         <module>04-shiro</module>
         <module>05-template-engine-thymeleaf</module>
         <module>09-druid-mybatis-fastjson</module>
+        <module>common</module>
     </modules>
     <packaging>pom</packaging>
     <name>springboot-demo</name>
