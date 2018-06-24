@@ -1,5 +1,8 @@
 package com.belonk.dao;
 
+import com.belonk.dao.base.BaseDao;
+import com.belonk.domain.MyEmployee;
+import com.belonk.domain.User;
 import com.belonk.entity.Department;
 import com.belonk.entity.Employee;
 import com.belonk.entity.Gender;
@@ -37,4 +40,15 @@ public interface EmployeeDao extends BaseDao<Employee> {
 
     @Async
     Future<List<Employee>> findByGender(Gender gender);
+
+    // projections
+
+    User findById(Long id);
+
+    List<User> findByNameIsLike(String name);
+
+    @Query("select e.id as id, e.name as name, e.age as age, d.id as departmentId, d.name as departmentName from Employee e, Department d where e.departmentId = d.id and e.id = ?1")
+    MyEmployee findByIdWithDepartment(Long id);
+
+    <T> List<T> findByAgeGreaterThan(int age, Class<T> tClass);
 }

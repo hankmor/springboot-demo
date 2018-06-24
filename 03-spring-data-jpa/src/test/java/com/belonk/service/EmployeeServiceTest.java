@@ -2,6 +2,8 @@ package com.belonk.service;
 
 import com.belonk.BaseTest;
 import com.belonk.common.util.JsonUtil;
+import com.belonk.domain.MyEmployee;
+import com.belonk.domain.MyEmployeeDTO;
 import com.belonk.domain.User;
 import com.belonk.entity.Department;
 import com.belonk.entity.Employee;
@@ -247,6 +249,58 @@ public class EmployeeServiceTest extends BaseTest {
     public void testAsyncQuery() {
         List<Employee> employees = employeeService.queryByGenderAsync(Gender.FEMALE);
         Assert.assertEquals(employees.size(), 8);
+    }
+
+    // query projections test
+
+    @Test
+    public void testQueryById() {
+        Long id = 10L;
+        String name = "test6";
+        User user = employeeService.queryById(id);
+        Assert.assertEquals(name, user.getName());
+    }
+
+    @Test
+    public void testQueryByName1() {
+        String name = "a";
+        List<User> users = employeeService.queryByName1(name);
+        Assert.assertTrue(users.size() == 2);
+    }
+
+    @Test
+    public void testQueryByIdWithDepartment() {
+        Long id = 10L;
+        String name = "test6";
+        String deptName = "技术部";
+        Long deptId = 1L;
+        MyEmployee employee = employeeService.queryByIdWithDepartment(id);
+        Assert.assertEquals(id, employee.getId());
+        Assert.assertEquals(name, employee.getName());
+        Assert.assertEquals(deptId, employee.getDepartmentId());
+        Assert.assertEquals(deptName, employee.getDepartmentName());
+    }
+
+    @Test
+    public void testQueryByIdWithDepartmentUseNativeSql() {
+        Long id = 10L;
+        String name = "test6";
+        String deptName = "技术部";
+        Long deptId = 1L;
+        MyEmployeeDTO employee = employeeService.queryByIdWithDepartmentUseNativeSql(id);
+        Assert.assertEquals(id, employee.getId());
+        Assert.assertEquals(name, employee.getName());
+        Assert.assertEquals(deptId, employee.getDeptId());
+        Assert.assertEquals(deptName, employee.getDeptName());
+    }
+
+
+    @Test
+    public void testDynamicProjections() {
+        int minAge = 21;
+
+        List<User> users = employeeService.queryByAgeGreaterThan(minAge);
+        Assert.assertEquals(5, users.size());
     }
 
     /*
