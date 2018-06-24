@@ -1,18 +1,15 @@
 package com.belonk.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.NoRepositoryBean;
+import com.belonk.domain.MyEmployeeDTO;
 
 /**
- * Created by sun on 2018/6/21.
+ * Created by sun on 2018/6/24.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@NoRepositoryBean
-public interface BaseDao<T> extends JpaRepository<T, Long>, JpaSpecificationExecutor<T> {
+public interface CustomEmployeeDao {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -21,7 +18,7 @@ public interface BaseDao<T> extends JpaRepository<T, Long>, JpaSpecificationExec
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
      
-     
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,5 +28,5 @@ public interface BaseDao<T> extends JpaRepository<T, Long>, JpaSpecificationExec
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    MyEmployeeDTO findByIdWithDepartment(Long id);
 }

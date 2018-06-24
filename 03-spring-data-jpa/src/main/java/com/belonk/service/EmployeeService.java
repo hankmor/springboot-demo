@@ -1,6 +1,9 @@
 package com.belonk.service;
 
+import com.belonk.dao.CustomEmployeeDao;
 import com.belonk.dao.EmployeeDao;
+import com.belonk.domain.MyEmployee;
+import com.belonk.domain.MyEmployeeDTO;
 import com.belonk.domain.User;
 import com.belonk.entity.Department;
 import com.belonk.entity.Employee;
@@ -52,7 +55,10 @@ public class EmployeeService extends BaseService<Employee> {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    @Autowired
     private EmployeeDao employeeDao;
+    @Autowired
+    private CustomEmployeeDao customEmployeeDao;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,6 +174,28 @@ public class EmployeeService extends BaseService<Employee> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    // query projections
+
+    public User queryById(Long id) {
+        return employeeDao.findById(id);
+    }
+
+    public List<User> queryByName1(String name) {
+        return employeeDao.findByNameIsLike("%" + name + "%");
+    }
+
+    public MyEmployee queryByIdWithDepartment(Long id) {
+        return employeeDao.findByIdWithDepartment(id);
+    }
+
+    public MyEmployeeDTO queryByIdWithDepartmentUseNativeSql(Long id) {
+        return customEmployeeDao.findByIdWithDepartment(id);
+    }
+
+    public List<User> queryByAgeGreaterThan(int minAage) {
+        return employeeDao.findByAgeGreaterThan(minAage, User.class);
     }
 
     /*
