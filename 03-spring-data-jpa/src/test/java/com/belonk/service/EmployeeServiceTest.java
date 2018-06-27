@@ -294,6 +294,33 @@ public class EmployeeServiceTest extends BaseTest {
         Assert.assertEquals(deptName, employee.getDeptName());
     }
 
+    @Test
+    public void testQueryByIdWithDepartmentUserJPQL() {
+        Long id = 10L;
+        String name = "test6";
+        String deptName = "技术部";
+        Long deptId = 1L;
+        // 直接返回DTO
+        MyEmployeeDTO employee = employeeService.queryByIdWithDepartmentUseJPQL(id);
+        Assert.assertEquals(id, employee.getId());
+        Assert.assertEquals(name, employee.getName());
+        Assert.assertEquals(deptId, employee.getDeptId());
+        Assert.assertEquals(deptName, employee.getDeptName());
+    }
+
+    @Test
+    public void testQueryByIdWithDepartmentUserJPQL1() {
+        Long id = 10L;
+        String name = "test6";
+        String deptName = "技术部";
+        Long deptId = 1L;
+        // 使用动态投影
+        MyEmployeeDTO employee = employeeService.queryByIdWithDepartmentUseJPQL1(id);
+        Assert.assertEquals(id, employee.getId());
+        Assert.assertEquals(name, employee.getName());
+        Assert.assertEquals(deptId, employee.getDeptId());
+        Assert.assertEquals(deptName, employee.getDeptName());
+    }
 
     @Test
     public void testDynamicProjections() {

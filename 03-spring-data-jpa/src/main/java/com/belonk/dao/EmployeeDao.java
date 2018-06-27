@@ -2,6 +2,7 @@ package com.belonk.dao;
 
 import com.belonk.dao.base.BaseDao;
 import com.belonk.domain.MyEmployee;
+import com.belonk.domain.MyEmployeeDTO;
 import com.belonk.domain.User;
 import com.belonk.entity.Department;
 import com.belonk.entity.Employee;
@@ -49,6 +50,12 @@ public interface EmployeeDao extends BaseDao<Employee> {
 
     @Query("select e.id as id, e.name as name, e.age as age, d.id as departmentId, d.name as departmentName from Employee e, Department d where e.departmentId = d.id and e.id = ?1")
     MyEmployee findByIdWithDepartment(Long id);
+
+    @Query("select new com.belonk.domain.MyEmployeeDTO(e.id, e.name, d.id, d.name) from Employee e, Department d where e.departmentId = d.id and e.id = ?1")
+    <T> T findByIdWithDepartment1(Long id, Class<T> clazz);
+
+    @Query("select new com.belonk.domain.MyEmployeeDTO(e.id, e.name, d.id, d.name) from Employee e, Department d where e.departmentId = d.id and e.id = ?1")
+    MyEmployeeDTO findByIdWithDepartment2(Long id);
 
     <T> List<T> findByAgeGreaterThan(int age, Class<T> tClass);
 }
