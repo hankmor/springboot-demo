@@ -194,6 +194,14 @@ public class EmployeeService extends BaseService<Employee> {
         return customEmployeeDao.findByIdWithDepartment(id);
     }
 
+    public MyEmployeeDTO queryByIdWithDepartmentUseJPQL(Long id) {
+        return employeeDao.findByIdWithDepartment2(id);
+    }
+
+    public MyEmployeeDTO queryByIdWithDepartmentUseJPQL1(Long id) {
+        return employeeDao.findByIdWithDepartment1(id, MyEmployeeDTO.class);
+    }
+
     public List<User> queryByAgeGreaterThan(int minAage) {
         return employeeDao.findByAgeGreaterThan(minAage, User.class);
     }
