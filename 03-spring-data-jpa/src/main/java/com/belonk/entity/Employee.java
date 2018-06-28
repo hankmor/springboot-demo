@@ -9,6 +9,10 @@ import javax.persistence.*;
 @Table(name = "employee")
 @Data
 @EqualsAndHashCode
+@NamedQueries({
+        @NamedQuery(name = "Employee.findByDeptId", query = "select e from Employee e where e.departmentId = ?1"),
+        @NamedQuery(name = "Employee.findByGender1", query = "select e from Employee e where e.gender = ?1"),
+})
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

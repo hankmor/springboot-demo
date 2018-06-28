@@ -1,10 +1,11 @@
 package com.belonk.domain;
 
+import com.belonk.entity.Employee;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Created by sun on 2018/6/24.
+ * Created by sun on 2018/6/28.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
@@ -12,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode
-public class MyEmployeeDTO {
+public class UserConstructWithEmployee {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -31,10 +32,8 @@ public class MyEmployeeDTO {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private Long id;
     private String name;
-    private Long deptId;
-    private String deptName;
+    private Integer age;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -44,12 +43,13 @@ public class MyEmployeeDTO {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public MyEmployeeDTO(Long id, String name, Long deptId, String deptName) {
-        this.id = id;
-        this.name = name;
-        this.deptId = deptId;
-        this.deptName = deptName;
+    public UserConstructWithEmployee() {}
+
+    public UserConstructWithEmployee(Employee employee) {
+        this.name = employee.getName();
+        this.age = employee.getAge();
     }
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,9 +58,9 @@ public class MyEmployeeDTO {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-
-
+    
+    
+    
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
