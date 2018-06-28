@@ -15,7 +15,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-public class User {
+public class UserConstructWithField {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -45,12 +45,9 @@ public class User {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public User() {
-    }
-
-    public User(Employee employee) {
-        this.id = employee.getId();
-        this.name = employee.getName();
+    public UserConstructWithField(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     /*

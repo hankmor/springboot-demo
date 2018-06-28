@@ -2,9 +2,7 @@ package com.belonk.service;
 
 import com.belonk.dao.CustomEmployeeDao;
 import com.belonk.dao.EmployeeDao;
-import com.belonk.domain.MyEmployee;
-import com.belonk.domain.MyEmployeeDTO;
-import com.belonk.domain.User;
+import com.belonk.domain.*;
 import com.belonk.entity.Department;
 import com.belonk.entity.Employee;
 import com.belonk.entity.Gender;
@@ -16,10 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,11 +79,11 @@ public class EmployeeService extends BaseService<Employee> {
 
     // query
 
-    public List<User> queryByName(String name) {
+    public List<UserConstructWithField> queryByName(String name) {
         List<Employee> employees = employeeDao.findByNameLike("%" + name + "%");
-        List<User> users = new ArrayList<>();
+        List<UserConstructWithField> users = new ArrayList<>();
         for (Employee employee : employees) {
-            users.add(new User(employee));
+//            users.add(new UserConstructWithField(employee));
         }
         return users;
     }
@@ -130,21 +125,18 @@ public class EmployeeService extends BaseService<Employee> {
 
     public Page<Employee> pageQueryByNameAndAage(int pageIndex, int pageSize, String name, int minAge) {
         // 创建查询条件规则
-        Specification<Employee> specification = new Specification<Employee>() {
-            @Override
-            public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-                List<Predicate> predicates = new ArrayList<>();
-                if (StringUtils.hasLength(name)) {
-                    predicates.add(cb.and(cb.like(root.get("name"), name)));
-                }
-                if (minAge > 0) {
-                    predicates.add(cb.and(cb.greaterThanOrEqualTo(root.get("age"), minAge)));
-                }
-                if (predicates.size() > 0) {
-                    cq.where(predicates.toArray(new Predicate[predicates.size()]));
-                }
-                return cq.getRestriction();
+        Specification<Employee> specification = (root, cq, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasLength(name)) {
+                predicates.add(cb.and(cb.like(root.get("name"), name)));
             }
+            if (minAge > 0) {
+                predicates.add(cb.and(cb.greaterThanOrEqualTo(root.get("age"), minAge)));
+            }
+            if (predicates.size() > 0) {
+                cq.where(predicates.toArray(new Predicate[predicates.size()]));
+            }
+            return cq.getRestriction();
         };
         // 创建排序规则
         Sort sort = new Sort(Sort.Direction.DESC, "id");
@@ -176,13 +168,33 @@ public class EmployeeService extends BaseService<Employee> {
         return null;
     }
 
+    // named query
+
+    public List<Employee> queryByDeptId(Long deptId) {
+        return employeeDao.findByDeptId(deptId);
+    }
+
+    public List<Employee> queryByGender(Gender gender) {
+        return employeeDao.findByGender1(gender);
+    }
+
+    // modifying query
+
+    public int reverseGenderOfFemale() {
+        return employeeDao.reverseGenderOfFemale();
+    }
+
+    public void deleteByDeptId(Long deptId) {
+        employeeDao.deleteInBulkByDeptId(deptId);
+    }
+
     // query projections
 
-    public User queryById(Long id) {
+    public UserConstructWithField queryById(Long id) {
         return employeeDao.findById(id);
     }
 
-    public List<User> queryByName1(String name) {
+    public List<UserConstructWithField> queryByName1(String name) {
         return employeeDao.findByNameIsLike("%" + name + "%");
     }
 
@@ -202,9 +214,17 @@ public class EmployeeService extends BaseService<Employee> {
         return employeeDao.findByIdWithDepartment1(id, MyEmployeeDTO.class);
     }
 
-    public List<User> queryByAgeGreaterThan(int minAage) {
-        return employeeDao.findByAgeGreaterThan(minAage, User.class);
+    public List<UserConstructWithEmployee> queryByDeptId1(Long deptId) {
+        return employeeDao.findByDeptId1(deptId);
     }
+
+    public List<UserConstructWithField> queryByAgeGreaterThan(int minAage) {
+        return employeeDao.findByAgeGreaterThan(minAage, UserConstructWithField.class);
+    }
+
+    public List<UserConstructWithField1> queryByAgeGreaterThan1(int minAage) {
+        return employeeDao.findByAgeGreaterThan(minAage, UserConstructWithField1.class);
+    };
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

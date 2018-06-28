@@ -2,9 +2,7 @@ package com.belonk.service;
 
 import com.belonk.BaseTest;
 import com.belonk.common.util.JsonUtil;
-import com.belonk.domain.MyEmployee;
-import com.belonk.domain.MyEmployeeDTO;
-import com.belonk.domain.User;
+import com.belonk.domain.*;
 import com.belonk.entity.Department;
 import com.belonk.entity.Employee;
 import com.belonk.entity.Gender;
@@ -70,7 +68,7 @@ public class EmployeeServiceTest extends BaseTest {
     @Test
     public void testQueryByName() {
         String name = "a";
-        List<User> users = employeeService.queryByName(name);
+        List<UserConstructWithField> users = employeeService.queryByName(name);
         System.out.println("users : " + users);
         Assert.assertTrue(users.size() == 2);
     }
@@ -251,20 +249,52 @@ public class EmployeeServiceTest extends BaseTest {
         Assert.assertEquals(employees.size(), 8);
     }
 
+    // named query test
+
+    @Test
+    public void testFindByDeptId() {
+        Long deptId = 1L;
+        List<Employee> employees = employeeService.queryByDeptId(deptId);
+        Assert.assertTrue(employees.size() == 8);
+    }
+
+    @Test
+    public void testQueryByGender1() {
+        Gender gender = Gender.FEMALE;
+        List<Employee> employees = employeeService.queryByGender(gender);
+        Assert.assertTrue(employees.size() == 8);
+    }
+
+    // modifying query test
+
+    @Test
+    public void testReverseGender() {
+        int rows = employeeService.reverseGenderOfFemale();
+        Assert.assertTrue(rows == 8);
+    }
+
+    @Test
+    public void testDeleteByDeptId() {
+        Long deptId = 2L;
+        employeeService.deleteByDeptId(deptId);
+        List<Employee> employees = employeeService.queryByDeptId(deptId);
+        Assert.assertTrue(employees.size() == 0);
+    }
+
     // query projections test
 
     @Test
     public void testQueryById() {
         Long id = 10L;
         String name = "test6";
-        User user = employeeService.queryById(id);
+        UserConstructWithField user = employeeService.queryById(id);
         Assert.assertEquals(name, user.getName());
     }
 
     @Test
     public void testQueryByName1() {
         String name = "a";
-        List<User> users = employeeService.queryByName1(name);
+        List<UserConstructWithField> users = employeeService.queryByName1(name);
         Assert.assertTrue(users.size() == 2);
     }
 
@@ -323,10 +353,23 @@ public class EmployeeServiceTest extends BaseTest {
     }
 
     @Test
+    public void testQueryByDeptId() {
+        Long deptId = 2L;
+        List<UserConstructWithEmployee> user1s = employeeService.queryByDeptId1(deptId);
+        Assert.assertTrue(user1s.size() == 2);
+    }
+
+    @Test
     public void testDynamicProjections() {
         int minAge = 21;
+        List<UserConstructWithField> users = employeeService.queryByAgeGreaterThan(minAge);
+        Assert.assertEquals(5, users.size());
+    }
 
-        List<User> users = employeeService.queryByAgeGreaterThan(minAge);
+    @Test
+    public void testDynamicProjections1() {
+        int minAge = 21;
+        List<UserConstructWithField1> users = employeeService.queryByAgeGreaterThan1(minAge);
         Assert.assertEquals(5, users.size());
     }
 
