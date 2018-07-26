@@ -43,11 +43,11 @@ public class ResultMsg<T> {
 
     //~ Methods ========================================================================================================
 
-    private ResultMsg() {
+    public ResultMsg() {
 
     }
 
-    private ResultMsg(String code, String msg, String type, T data) {
+    public ResultMsg(String code, String msg, String type, T data) {
         this.rtnCode = code;
         this.rtnMsg = msg;
         this.type = type;
