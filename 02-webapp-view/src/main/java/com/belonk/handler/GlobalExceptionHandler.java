@@ -1,27 +1,26 @@
-package com.belonk.web;
+package com.belonk.handler;
 
 import com.belonk.common.base.MsgDefinition;
 import com.belonk.common.base.ResultMsg;
-import com.belonk.config.CustomParamConfig;
-import com.belonk.config.RandomParamConfig;
 import com.belonk.exception.BusinessException;
+import com.belonk.msg.URLResultMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * Created by sun on 2018/6/7.
+ * Created by sun on 2018/7/25.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@Controller
-public class HomeController {
+@ControllerAdvice
+public class GlobalExceptionHandler {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -30,7 +29,8 @@ public class HomeController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(HomeController.class);
+    private static Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    public static final String VIEW = "error";
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,10 +40,7 @@ public class HomeController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private CustomParamConfig customParamConfig;
-    @Autowired
-    private RandomParamConfig randomParamConfig;
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -63,20 +60,27 @@ public class HomeController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("msg", "belonk.com");
-        model.addAttribute("customParam", customParamConfig);
-        model.addAttribute("randomParam", randomParamConfig);
-        return "/index";
-    }
-
-    @GetMapping("/json")
+    @ExceptionHandler(value = {BusinessException.class})
     @ResponseBody
-    public ResultMsg json() throws Exception {
-        throw new BusinessException(MsgDefinition.EMPTY_ARGUMENTS);
+    public ResultMsg jsonErrorHandler(HttpServletRequest request, BusinessException exception) {
+        URLResultMsg result = new URLResultMsg();
+        String uri = request.getRequestURI();
+        result.setUrl(uri);
+        MsgDefinition md = exception.msgDef();
+        if (md != null) {
+            String code = md.codeOf();
+            String msg = md.msgOf();
+            result.setRtnCode(code);
+            result.setRtnMsg(msg);
+            result.setType(ResultMsg.MESSAGE_TYPE_ERROR);
+        } else {
+            result.setRtnCode(MsgDefinition.UNKOWN_ERROR.codeOf());
+            result.setRtnMsg(exception.getMessage());
+            result.setType(ResultMsg.MESSAGE_TYPE_ERROR);
+        }
+        return result;
     }
-
+    
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
