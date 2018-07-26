@@ -1,27 +1,17 @@
-package com.belonk.web;
+package com.belonk.msg;
 
-import com.belonk.common.base.MsgDefinition;
 import com.belonk.common.base.ResultMsg;
-import com.belonk.config.CustomParamConfig;
-import com.belonk.config.RandomParamConfig;
-import com.belonk.exception.BusinessException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import lombok.Data;
 
 /**
- * Created by sun on 2018/6/7.
+ * Created by sun on 2018/7/25.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@Controller
-public class HomeController {
+@Data
+public class URLResultMsg extends ResultMsg {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -30,7 +20,7 @@ public class HomeController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(HomeController.class);
+    
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,10 +30,7 @@ public class HomeController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private CustomParamConfig customParamConfig;
-    @Autowired
-    private RandomParamConfig randomParamConfig;
+    private String url;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,21 +49,9 @@ public class HomeController {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("msg", "belonk.com");
-        model.addAttribute("customParam", customParamConfig);
-        model.addAttribute("randomParam", randomParamConfig);
-        return "/index";
-    }
-
-    @GetMapping("/json")
-    @ResponseBody
-    public ResultMsg json() throws Exception {
-        throw new BusinessException(MsgDefinition.EMPTY_ARGUMENTS);
-    }
-
+    
+    
+    
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
