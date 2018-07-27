@@ -224,7 +224,7 @@ public class EmployeeService extends BaseService<Employee> {
 
     public List<UserConstructWithField1> queryByAgeGreaterThan1(int minAage) {
         return employeeDao.findByAgeGreaterThan(minAage, UserConstructWithField1.class);
-    };
+    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

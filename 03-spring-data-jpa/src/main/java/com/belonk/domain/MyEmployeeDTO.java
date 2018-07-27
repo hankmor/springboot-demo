@@ -44,6 +44,9 @@ public class MyEmployeeDTO {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    public MyEmployeeDTO() {
+    }
+
     public MyEmployeeDTO(Long id, String name, Long deptId, String deptName) {
         this.id = id;
         this.name = name;
