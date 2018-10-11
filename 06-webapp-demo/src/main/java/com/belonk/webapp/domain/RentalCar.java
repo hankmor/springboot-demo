@@ -1,6 +1,6 @@
 package com.belonk.webapp.domain;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Created by sun on 2018/10/9.
@@ -76,7 +76,7 @@ public class RentalCar extends Car {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @NotNull(message = "出租车站不能为空")
+    @NotEmpty(message = "出租车站不能为空")
     public String getRentalStation() {
         return rentalStation;
     }
