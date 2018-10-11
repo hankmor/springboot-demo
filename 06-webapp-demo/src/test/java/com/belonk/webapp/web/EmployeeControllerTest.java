@@ -92,6 +92,7 @@ public class EmployeeControllerTest {
         MockHttpServletResponse resultResponse = mvcResult.getResponse();
         String result = resultResponse.getContentAsString();
         System.out.println(result);
+        // {"rtnCode":"4002","rtnMsg":"错误字段：id，错误值：-1，原因：id can't be negative\r\n错误字段：role，错误值：null，原因：role cant't be null\r\n","data":null,"type":"error"}
     }
     
     /*
