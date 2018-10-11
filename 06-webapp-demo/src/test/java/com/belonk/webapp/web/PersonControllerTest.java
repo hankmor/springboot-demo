@@ -2,6 +2,7 @@ package com.belonk.webapp.web;
 
 import com.belonk.common.util.JsonUtil;
 import com.belonk.webapp.domain.Person;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -98,6 +99,8 @@ public class PersonControllerTest {
         MockHttpServletResponse resultResponse = mvcResult.getResponse();
         String result = resultResponse.getContentAsString();
         System.out.println(result);
+        // {"rtnCode":"4002","rtnMsg":"错误字段：birthday，错误值：Thu Oct 11 11:58:43 CST 2018，原因：生日必须为过去的时间；\r\n错误字段：email，错误值：abc123，原因：邮箱地址格式错误；\r\n错误字段：age，错误值：10，原因：年龄必须大于18；\r\n错误字段：phone，错误值：123，原因：号码格式不正确；\r\n","data":null,"type":"error"}
+        Assert.assertTrue(result.contains("\"rtnCode\":\"4002\""));
     }
 
     /*

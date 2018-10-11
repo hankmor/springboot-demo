@@ -1,5 +1,7 @@
 package com.belonk.webapp.web;
 
+import com.belonk.common.base.MsgDefinition;
+import com.belonk.common.base.ResultMsg;
 import com.belonk.webapp.domain.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,15 +10,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sun on 2018/10/9.
@@ -38,11 +37,6 @@ public class EmployeeController {
 
     private static Logger log = LoggerFactory.getLogger(EmployeeController.class);
 
-    @Autowired
-    @Qualifier("employeeFormValidator")
-    private Validator validator;
-    private ObjectError error;
-
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -51,7 +45,9 @@ public class EmployeeController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    @Autowired
+    @Qualifier("employeeFormValidator")
+    private Validator validator;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,24 +73,22 @@ public class EmployeeController {
     }
 
     @PostMapping(produces = "application/json;charset=utf-8")
-    public Map save(@RequestBody @Validated Employee employee,
-                    BindingResult bindingResult, Model model) {
-        Map map = new HashMap();
+    public ResultMsg save(@RequestBody @Validated Employee employee,
+                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            List<ObjectError> errors = bindingResult.getAllErrors();
-            String errorStr = "";
-            for (ObjectError error : errors) {
-                FieldError fieldError = (FieldError) error;
-                errorStr += String.format("错误字段：%s，错误值：%s，原因：%s", fieldError.getField(), fieldError.getRejectedValue(), fieldError.getDefaultMessage()) + "\r\n";
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            StringBuilder sb = new StringBuilder();
+            for (FieldError error : errors) {
+                sb.append(String.format("错误字段：%s，错误值：%s，原因：%s",
+                        error.getField(),
+                        error.getRejectedValue(),
+                        error.getDefaultMessage())
+                ).append("\r\n");
             }
-            map.put("rtnCode", 9999);
-            map.put("rtnMsg", errorStr);
+            return ResultMsg.error(MsgDefinition.ILLEGAL_ARGUMENTS.codeOf(), sb.toString());
         } else {
-            map.put("rtnCode", 0);
-            map.put("rtnMsg", "ok");
-            map.put("data", employee);
+            return ResultMsg.success(employee);
         }
-        return map;
     }
     
     /*
