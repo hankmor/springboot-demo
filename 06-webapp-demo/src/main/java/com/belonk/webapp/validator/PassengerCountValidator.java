@@ -1,7 +1,7 @@
 package com.belonk.webapp.validator;
 
 import com.belonk.webapp.domain.Car;
-import com.belonk.webapp.domain.Person;
+import com.belonk.webapp.domain.User;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,6 +33,7 @@ public class PassengerCountValidator implements ConstraintValidator<PassengerCou
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    // 核载人数
     private int passengerCount;
 
     /*
@@ -61,7 +62,7 @@ public class PassengerCountValidator implements ConstraintValidator<PassengerCou
         if (car == null) {
             return true;
         }
-        List<Person> passengers = car.getPassengers();
+        List<User> passengers = car.getPassengers();
         if (passengers == null) {
             return true;
         }
@@ -73,6 +74,7 @@ public class PassengerCountValidator implements ConstraintValidator<PassengerCou
 
     @Override
     public void initialize(PassengerCount passengerCount) {
+        // 根据注解的value属性来获取核载人数
         this.passengerCount = passengerCount.value();
     }
     

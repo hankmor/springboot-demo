@@ -1,9 +1,11 @@
 package com.belonk.webapp.domain;
 
+import com.belonk.webapp.validator.CarChecks;
 import com.belonk.webapp.validator.PassengerCount;
 import lombok.Data;
 
 import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -17,7 +19,7 @@ import java.util.List;
  * @since 1.0
  */
 @Data
-@PassengerCount(value = 2, message = "你确定要超载？")
+@PassengerCount(value = 2/*, message = "你确定要超载？"*/)
 public class Car {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,18 +48,21 @@ public class Car {
     // 牌照
     private String licensePlate;
 
-    @Min(value = 2,message = "座位数大于等于2")
+    @Min(value = 2, message = "座位数大于等于2")
     // 座位数
     private int seatCount;
 
     // valid注解会级联验证关联对象，如果对象是集合、Map、数组，也会验证其中的元素
     @Valid
     // 司机
-    private Person driver;
+    private Driver driver;
 
     @Valid
     // 乘客信息
-    private List<Person> passengers;
+    private List<User> passengers;
+
+    @AssertTrue(message = "必须先通过上路检测", groups = CarChecks.class)
+    private boolean passedVehicleInspection;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,7 +85,7 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-    public Car(List<Person> passengers) {
+    public Car(List<User> passengers) {
         this.passengers = passengers;
     }
 
