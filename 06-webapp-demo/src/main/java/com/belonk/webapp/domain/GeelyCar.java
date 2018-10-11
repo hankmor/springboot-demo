@@ -1,12 +1,7 @@
 package com.belonk.webapp.domain;
 
-import com.belonk.webapp.validator.CarChecks;
-import com.belonk.webapp.validator.DriverChecks;
 import com.belonk.webapp.validator.ValidNumber;
 import lombok.Data;
-
-import javax.validation.GroupSequence;
-import javax.validation.constraints.NotEmpty;
 
 /**
  * Created by sun on 2018/10/10.
@@ -16,9 +11,7 @@ import javax.validation.constraints.NotEmpty;
  * @since 1.0
  */
 @Data
-// 重新定义默认分组，
-@GroupSequence({GreatWallCar.class, DriverChecks.class, CarChecks.class})
-public class GreatWallCar extends Car {
+public class GeelyCar extends Car {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -36,9 +29,6 @@ public class GreatWallCar extends Car {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    @NotEmpty(message = "编号不能为空")
-    private String no;
 
     @ValidNumber(message = "汽车生产编号不合法")
     private String productionNo;

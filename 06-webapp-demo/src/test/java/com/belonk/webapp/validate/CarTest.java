@@ -278,10 +278,34 @@ public class CarTest {
         john.setHasDrivingLicense(true);
         greatWallCar.setDriver(john);
 
-        Set<ConstraintViolation<GreatWallCar>> constraintViolations = validator.validate(greatWallCar, Default.class);
+        Set<ConstraintViolation<GreatWallCar>> constraintViolations = validator.validate(greatWallCar);
         for (ConstraintViolation<GreatWallCar> constraintViolation : constraintViolations) {
             System.out.println(constraintViolation.getMessage());
         }
+        assertEquals(0, constraintViolations.size());
+    }
+
+    // 多个校验组合约束测试
+
+    @Test
+    public void testConstraintComposing() {
+        GeelyCar geelyCar = new GeelyCar();
+        geelyCar.setManufacturer("geely wall");
+        geelyCar.setPassedVehicleInspection(true);
+        geelyCar.setLicensePlate("川A123456");
+        geelyCar.setSeatCount(5);
+        geelyCar.setProductionNo("123");
+
+        Set<ConstraintViolation<GeelyCar>> constraintViolations = validator.validate(geelyCar);
+        assertEquals(1, constraintViolations.size());
+        assertEquals("汽车生产编号不合法", constraintViolations.iterator().next().getMessage());
+
+        Driver john = new Driver("john", "john@123.com", 2);
+        john.setHasDrivingLicense(true);
+        geelyCar.setDriver(john);
+        geelyCar.setProductionNo("GL12345");
+
+        constraintViolations = validator.validate(geelyCar);
         assertEquals(0, constraintViolations.size());
     }
 
