@@ -2,6 +2,7 @@ package com.belonk.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 
@@ -15,6 +16,7 @@ public class Employee {
     private Long id;
 
     @Column(nullable = false, columnDefinition = "varchar(50) COMMENT '姓名'")
+    @NotEmpty
     private String name;
 
     @Column(nullable = false, columnDefinition = "bit COMMENT '性别'")

@@ -6,6 +6,7 @@ import com.belonk.service.EmployeeService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class EmployeeController {
     @ApiOperation(value = "根据名称获取员工", notes = "根据name模糊查询员工")
     @ApiImplicitParam(name = "name", value = "员工名称", required = true, dataType = "String")
     @GetMapping(value = "/query")
-    public ResultMsg getByName(String name) {
+    public ResultMsg getByName(@NotEmpty String name) {
         List<Employee> employees = employeeService.queryByName(name);
         return ResultMsg.success(employees);
     }
@@ -101,7 +102,6 @@ public class EmployeeController {
 
     @ApiOperation(value = "更新员工信息", notes = "更新员工信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "员工id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "name", value = "员工名称", required = true, dataType = "String"),
             @ApiImplicitParam(name = "gender", value = "性别", dataType = "Integer"),
             @ApiImplicitParam(name = "age", value = "年龄", dataType = "Integer"),
