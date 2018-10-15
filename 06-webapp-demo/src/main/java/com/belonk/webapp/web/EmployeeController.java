@@ -76,7 +76,10 @@ public class EmployeeController {
     public ResultMsg save(@RequestBody @Validated Employee employee,
                           BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            // 校验失败，获取校验错误信息
             List<FieldError> errors = bindingResult.getFieldErrors();
+            System.out.println("getObjectName : " + bindingResult.getObjectName());
+            System.out.println("getNestedPath : " + bindingResult.getNestedPath());
             StringBuilder sb = new StringBuilder();
             for (FieldError error : errors) {
                 sb.append(String.format("错误字段：%s，错误值：%s，原因：%s",
