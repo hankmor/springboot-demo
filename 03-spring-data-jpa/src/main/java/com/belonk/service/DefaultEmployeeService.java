@@ -6,8 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
@@ -39,6 +41,8 @@ public class DefaultEmployeeService {
 
     @Autowired
     private DefaultEmployeeDao employeeDao;
+    @Autowired
+    private EntityManager entityManager;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,6 +61,8 @@ public class DefaultEmployeeService {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
+
+    // CRUD
 
     public Employee add(Employee employee) {
         Assert.isNull(employee.getId(), "Id must be null.");
@@ -91,7 +97,72 @@ public class DefaultEmployeeService {
         name = "%" + name + "%";
         return employeeDao.findByNameLike(name);
     }
-    
+
+    // Transaction
+
+    @Transactional
+    public Employee create(Employee employee) throws Exception {
+        employee = employeeDao.save(employee);
+        // 未指定rollback的异常，不会回滚
+        throw new Exception("throw exception");
+        // return employee;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Employee createRollback(Employee employee) throws Exception {
+        employee = employeeDao.save(employee);
+        // 抛出Exception，事务会回滚
+        throw new Exception("throw exception");
+        // return employee;
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Employee createRollback1(Employee employee) throws Exception {
+        employee = employeeDao.save(employee);
+        // 抛出Exception，事务不会回滚
+        throw new Exception("throw Exception");
+        // return employee;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Employee createRollback2(Employee employee) throws Exception {
+        employee = employeeDao.save(employee);
+        // 抛出RuntimeException，事务会回滚
+        throw new RuntimeException("throw RuntimeException");
+        // return employee;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Employee updateAfterGet(Employee employee) {
+        employee = employeeDao.getOne(employee.getId());
+        System.out.println(entityManager.contains(employee));
+        employee.setAge(100);
+        try {
+            subMethod();
+        } catch (Exception e) {
+            // 调用了setAge方法，age会直接更新，不论是否调用save
+            return employee;
+        }
+        employeeDao.save(employee);
+        return employee;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Employee updateAfterGet1(Employee employee) {
+        employee = employeeDao.getOne(employee.getId());
+        System.out.println(entityManager.contains(employee));
+        employee.setAge(100);
+        try {
+            subMethod();
+        } catch (Exception e) {
+            // 调用entityManager.clear，取消更新
+            entityManager.clear();
+            return employee;
+        }
+        employeeDao.save(employee);
+        return employee;
+    }
+
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -100,5 +171,7 @@ public class DefaultEmployeeService {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    private void subMethod() {
+        throw new RuntimeException("throw exception");
+    }
 }
