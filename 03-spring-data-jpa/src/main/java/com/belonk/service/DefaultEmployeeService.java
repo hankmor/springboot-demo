@@ -134,17 +134,16 @@ public class DefaultEmployeeService {
 
     @Transactional(rollbackFor = Exception.class)
     public Employee updateAfterGet(Employee employee) {
-        employee = employeeDao.getOne(employee.getId());
-        System.out.println(entityManager.contains(employee));
-        employee.setAge(100);
+        Employee employee1 = employeeDao.getOne(employee.getId());
+        System.out.println(entityManager.contains(employee1));
+        // 调用了setAge方法，age会直接更新，不论是否调用save
+        employee1.setAge(100);
         try {
             subMethod();
         } catch (Exception e) {
-            // 调用了setAge方法，age会直接更新，不论是否调用save
             return employee;
         }
-        employeeDao.save(employee);
-        return employee;
+        return employeeDao.save(employee1);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -157,6 +156,34 @@ public class DefaultEmployeeService {
         } catch (Exception e) {
             // 调用entityManager.clear，取消更新
             entityManager.clear();
+            return employee;
+        }
+        employeeDao.save(employee);
+        return employee;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Employee createThenUpdate(Employee employee) {
+        System.out.println(entityManager.contains(employee));
+        employeeDao.save(employee);
+        System.out.println(entityManager.contains(employee));
+        employee.setAge(100);
+        employeeDao.save(employee);
+        // 异常，事务回滚，不能成功插入和更新数据
+        subMethod();
+        return employee;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Employee createThenUpdate1(Employee employee) {
+        System.out.println(entityManager.contains(employee));
+        employeeDao.save(employee);
+        System.out.println(entityManager.contains(employee));
+        employee.setAge(100);
+        // 捕获异常，事务不回滚，并且对受控的entity调用了set，不论是否save，都持久化到库
+        try {
+            subMethod();
+        } catch (Exception e) {
             return employee;
         }
         employeeDao.save(employee);

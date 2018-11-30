@@ -200,6 +200,32 @@ public class DefaultEmployeeServiceTest extends BaseTest {
         Assert.assertNotEquals(100, (int) employee.getAge());
     }
 
+    @Test
+    public void testCreateAndUpdate() {
+        Random random = new Random();
+        Employee employee = new Employee();
+        employee.setAge(random.nextInt(60));
+        employee.setGender(Gender.FEMALE);
+        employee.setName("create-test-xx");
+        employee = employeeService.createThenUpdate(employee);
+        Assert.assertNull(employee);
+        // employee = employeeService.getById(employee.getId());
+        // Assert.assertNotEquals(100, (int) employee.getAge());
+    }
+
+    @Test
+    public void testCreateAndUpdate1() {
+        Random random = new Random();
+        Employee employee = new Employee();
+        employee.setAge(random.nextInt(60));
+        employee.setGender(Gender.FEMALE);
+        employee.setName("create-test-xx");
+        employee = employeeService.createThenUpdate1(employee);
+        Assert.assertNotNull(employee);
+        employee = employeeService.getById(employee.getId());
+        Assert.assertEquals(100, (int) employee.getAge());
+    }
+
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
