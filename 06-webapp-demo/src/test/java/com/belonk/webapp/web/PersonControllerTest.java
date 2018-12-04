@@ -79,7 +79,7 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void testAdd() throws Exception {
+    public void testAddFailed() throws Exception {
         Person person = new Person();
         person.setName("张三");
         person.setEmail("abc123");
@@ -103,6 +103,27 @@ public class PersonControllerTest {
         Assert.assertTrue(result.contains("\"rtnCode\":\"4002\""));
     }
 
+    @Test
+    public void testAddSuccess() throws Exception {
+        Person person = new Person();
+        person.setName("张三");
+        person.setEmail("abc@abc.com");
+        person.setAge(20);
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post("/person")
+                        .accept("application/json;charset=utf-8")
+                        .characterEncoding("utf-8")
+                        // 设置请求的content-type
+                        .contentType("application/json;charset=utf-8")
+                        // 设置json格式请求参数
+                        .content(JsonUtil.toJson(person))
+        ).andReturn();
+        MockHttpServletResponse resultResponse = mvcResult.getResponse();
+        String result = resultResponse.getContentAsString();
+        System.out.println(result);
+    }
+
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -110,9 +131,9 @@ public class PersonControllerTest {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-    
-    
-    
+
+
+
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -120,9 +141,9 @@ public class PersonControllerTest {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-     
-     
-     
+
+
+
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
