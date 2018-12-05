@@ -11,8 +11,10 @@
         <module>03-spring-data-jpa</module>
         <module>04-shiro</module>
         <module>05-template-engine-thymeleaf</module>
-        <module>09-druid-mybatis-fastjson</module>
+        <module>06-webapp-demo</module>
         <module>07-swagger</module>
+        <module>09-druid-mybatis-fastjson</module>
+        <module>10-redisson</module>
         <module>common</module>
     </modules>
     <packaging>pom</packaging>
