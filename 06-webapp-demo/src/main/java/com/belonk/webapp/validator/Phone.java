@@ -18,7 +18,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Phone {
-    String message() default "{Phone}";
+    String message() default "{com.belonk.validation.phone}";
 
     Class<?>[] groups() default {};
 
