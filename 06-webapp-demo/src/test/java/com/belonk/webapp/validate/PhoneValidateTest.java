@@ -1,18 +1,29 @@
-package com.belonk.webapp.validator;
+package com.belonk.webapp.validate;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import com.belonk.webapp.validator.Phone;
+import lombok.Data;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.Set;
+
+@Data
+class Bean {
+    @Phone
+    private String phone;
+}
 
 /**
- * 电话号码验证器。
- * <p>
- * Created by sun on 2018/10/9.
+ * Created by sun on 2018/12/12.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-public class PhoneValidator implements ConstraintValidator<Phone, String> {
+public class PhoneValidateTest {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -31,7 +42,7 @@ public class PhoneValidator implements ConstraintValidator<Phone, String> {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    private static Validator validator;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,22 +62,19 @@ public class PhoneValidator implements ConstraintValidator<Phone, String> {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Override
-    public void initialize(Phone phone) {
-
+    @Before
+    public void setUp() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
-    @Override
-    public boolean isValid(String phoneNo, ConstraintValidatorContext constraintValidatorContext) {
-        if (phoneNo == null || "".equals(phoneNo)) {
-            // 电话号码可以为空
-            return true;
-        }
-        // 验证手机号码
-        if (phoneNo.matches("\\d{11}")) {
-            return true;
-        } else { // 验证座机号码，格式：010-12345678
-            return phoneNo.matches("^\\(?\\d{3,4}\\)?-\\d{7,8}$");
+    @Test
+    public void testPhoneValidate() {
+        Bean bean = new Bean();
+        bean.setPhone("123");
+        Set<ConstraintViolation<Bean>> constraints = validator.validate(bean);
+        for (ConstraintViolation<Bean> constraint : constraints) {
+            System.out.println(constraint.getInvalidValue());
+            System.out.println(constraint.getMessage());
         }
     }
 
