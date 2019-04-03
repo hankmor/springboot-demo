@@ -61,8 +61,9 @@ public class CallbackSender implements InitializingBean, RabbitTemplate.ConfirmC
 
     public void send() {
         String uuid = UUID.randomUUID().toString();
-        String word = "这是回调信息";
-        callbackRabbitTemplate.convertAndSend(RabbitConfig.HELLO_QUEUE, word);
+        Object word = "这是回调信息";
+        log.info("Sending : " + word + ", with uuid : " + uuid);
+        callbackRabbitTemplate.convertAndSend(RabbitConfig.HELLO_QUEUE, word, new CorrelationData(uuid));
     }
 
     @Override
