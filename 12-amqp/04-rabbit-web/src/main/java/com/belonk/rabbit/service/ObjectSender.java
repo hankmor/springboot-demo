@@ -1,15 +1,13 @@
 package com.belonk.rabbit.service;
 
 import com.belonk.rabbit.config.RabbitConfig;
+import com.belonk.rabbit.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by sun on 2019/4/3.
@@ -59,12 +57,10 @@ public class ObjectSender {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public void send() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("key1", 1);
-        map.put("key2", 2L);
-        log.info("Sending : " + Objects.toString(map));
-        rabbitTemplate.convertAndSend(RabbitConfig.OBJECT_QUEUE, map);
+    public void sendUser(User user) {
+        log.info("Sending user object : " + user);
+        rabbitTemplate.convertAndSend(RabbitConfig.OBJECT_QUEUE, user);
+        System.out.println("rabbitTemplate in HelloSender : " + rabbitTemplate);
     }
 
     /*

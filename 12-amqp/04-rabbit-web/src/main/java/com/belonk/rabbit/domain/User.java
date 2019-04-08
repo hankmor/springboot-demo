@@ -1,21 +1,23 @@
-package com.belonk.rabbit.service;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
+package com.belonk.rabbit.domain;
 
 /**
- * Created by sun on 2019/4/3.
+ * Created by sun on 2019/4/4.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@Component
-public class HelloSender {
+
+import lombok.Data;
+import lombok.ToString;
+
+import java.io.Serializable;
+
+// 必须实现Serializable接口
+
+@Data
+@ToString
+public class User implements Serializable {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -24,7 +26,7 @@ public class HelloSender {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private static Logger log = LoggerFactory.getLogger(HelloSender.class);
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,8 +36,8 @@ public class HelloSender {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Resource
-    private RabbitTemplate rabbitTemplate;
+    private String name;
+    private Integer age;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,13 +57,6 @@ public class HelloSender {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public String sayHello(String queue, String name) {
-        String word = "hello, " + name + "!";
-        log.info("sending : " + word);
-        rabbitTemplate.convertAndSend(queue, word);
-        System.out.println("rabbitTemplate in HelloSender : " + rabbitTemplate);
-        return word;
-    }
 
 
     /*
