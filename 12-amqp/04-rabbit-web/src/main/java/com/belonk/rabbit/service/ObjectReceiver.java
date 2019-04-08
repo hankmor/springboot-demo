@@ -1,12 +1,11 @@
 package com.belonk.rabbit.service;
 
 import com.belonk.rabbit.config.RabbitConfig;
+import com.belonk.rabbit.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * Created by sun on 2019/4/3.
@@ -56,8 +55,8 @@ public class ObjectReceiver {
      */
 
     @RabbitListener(queues = RabbitConfig.OBJECT_QUEUE)
-    public void receive(Map<String, Object> map) {
-        log.info("Receive object : " + map);
+    public void receiveUser(User user) {
+        log.info("Receive user : " + user);
     }
 
     /*

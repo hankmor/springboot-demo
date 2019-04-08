@@ -5,10 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 
 /**
@@ -19,7 +18,7 @@ import java.util.UUID;
  * @since 1.0
  */
 @Component
-public class CallbackSender implements InitializingBean, RabbitTemplate.ConfirmCallback {
+public class CallbackSender {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -38,7 +37,7 @@ public class CallbackSender implements InitializingBean, RabbitTemplate.ConfirmC
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
+    @Resource
     private RabbitTemplate callbackRabbitTemplate;
 
     /*
@@ -64,18 +63,6 @@ public class CallbackSender implements InitializingBean, RabbitTemplate.ConfirmC
         Object word = "这是回调信息";
         log.info("Sending : " + word + ", with uuid : " + uuid);
         callbackRabbitTemplate.convertAndSend(RabbitConfig.HELLO_QUEUE, word, new CorrelationData(uuid));
-    }
-
-    @Override
-    public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-        log.info("correlationData : " + correlationData);
-        log.info("ack : " + ack);
-        log.info("cause : " + cause);
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        this.callbackRabbitTemplate.setConfirmCallback(this);
     }
 
     /*

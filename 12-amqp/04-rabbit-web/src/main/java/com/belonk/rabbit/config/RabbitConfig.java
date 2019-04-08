@@ -1,8 +1,16 @@
 package com.belonk.rabbit.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.support.CorrelationData;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 /**
  * Created by sun on 2019/4/2.
@@ -21,8 +29,11 @@ public class RabbitConfig {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    private static Logger log = LoggerFactory.getLogger(RabbitConfig.class);
+
     public static final String HELLO_QUEUE = "web.sample.hello.queue";
     public static final String HELLO_MORE_QUEUE = "web.sample.hello.more.queue";
+    public static final String JSON_QUEUE = "web.sample.json.queue";
     public static final String OBJECT_QUEUE = "web.sample.object.queue";
     public static final String TOPIC_LAZY_QUEUE = "web.sample.topic.lazy.queue";
     public static final String TOPIC_RABBIT_QUEUE = "web.sample.topic.rabbit.queue";
@@ -76,6 +87,11 @@ public class RabbitConfig {
     @Bean
     public Queue helloMoreQueue() {
         return new Queue(HELLO_MORE_QUEUE);
+    }
+
+    @Bean
+    public Queue jsonQueue() {
+        return new Queue(JSON_QUEUE);
     }
 
     // 直接存储对象队列
@@ -159,19 +175,36 @@ public class RabbitConfig {
         return BindingBuilder.bind(fanout2Queue).to(fanoutExchange);
     }
 
-    // @Bean
-    // public RabbitTemplate callbackRabbitTemplate() {
-    //     RabbitTemplate rabbitTemplate = new RabbitTemplate();
-    //     rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
-    //         @Override
-    //         public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-    //             System.out.println("correlationData : " + correlationData);
-    //             System.out.println("ack : " + ack);
-    //             System.out.println("cause : " + cause);
-    //         }
-    //     });
-    //     return rabbitTemplate;
-    // }
+    @Bean
+    // @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        return new RabbitTemplate(connectionFactory);
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public RabbitTemplate jsonRabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        // 申明json转换器，及其转换类型，默认为SimpleMessageConverter
+        Jackson2JsonMessageConverter messageConverter = new Jackson2JsonMessageConverter();
+        template.setMessageConverter(messageConverter);
+        return template;
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public RabbitTemplate callbackRabbitTemplate(ConnectionFactory connectionFactor) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactor);
+        rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
+            @Override
+            public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+                log.info("correlationData : " + correlationData);
+                log.info("ack : " + ack);
+                log.info("cause : " + cause);
+            }
+        });
+        return rabbitTemplate;
+    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
