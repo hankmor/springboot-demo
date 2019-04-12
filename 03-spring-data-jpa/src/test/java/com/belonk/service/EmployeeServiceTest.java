@@ -373,6 +373,66 @@ public class EmployeeServiceTest extends BaseTest {
         Assert.assertEquals(5, users.size());
     }
 
+    @Test
+    public void testProjectionsUseNativeSqlWithInterface() {
+        Long deptId = 2L;
+        // 抛出异常
+        try {
+            MyEmployee myEmployeeDTO = employeeService.queryByIdWithDepartmentUseNativeSqlWithInterfaceBean(deptId);
+        } catch (Exception e) {
+            Assert.assertNotNull(e);
+            Assert.assertNotNull(e.getMessage());
+            log.error("Native sql result transform to interface error :", e);
+        }
+    }
+
+    @Test
+    public void testProjectionsUseNativeSqlWithoutInterface() {
+        Long deptId = 2L;
+        // 抛出异常
+        try {
+            MyEmployeeDTO myEmployeeDTO = employeeService.queryByIdWithDepartmentUseNativeSqlWithoutInterfaceBean(deptId);
+        } catch (Exception e) {
+            Assert.assertNotNull(e);
+            Assert.assertNotNull(e.getMessage());
+            log.error("Native sql result transform to dynamic class error :", e);
+        }
+    }
+
+    @Test
+    public void testProjectionsUseNativeSqlWithClass() {
+        Long deptId = 2L;
+        // 抛出异常
+        try {
+            MyEmployeeDTO myEmployeeDTO = employeeService.queryByIdWithDepartmentUseNativeSqlWithClass(deptId);
+        } catch (Exception e) {
+            Assert.assertNotNull(e);
+            Assert.assertNotNull(e.getMessage());
+            log.error("Native sql result transform to interface error :", e);
+        }
+    }
+
+    @Test
+    public void testProjectionsUseNativeSqlWithMap() {
+        Long deptId = 2L;
+        // 抛出异常
+        try {
+            MyEmployeeDTO myEmployeeDTO = employeeService.queryByIdWithDepartmentUseNativeSqlWithMap(deptId);
+        } catch (Exception e) {
+            Assert.assertNotNull(e);
+            Assert.assertNotNull(e.getMessage());
+            log.error("Native sql result transform to map error :", e);
+        }
+    }
+
+    // 异常
+
+    @Test
+    public void testProjectionsUseNativeSqlWithTuple() {
+        Long deptId = 2L;
+        MyEmployeeDTO myEmployeeDTO = employeeService.queryByIdWithDepartmentUseNativeSqlWithTuple(deptId);
+    }
+
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
