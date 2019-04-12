@@ -16,7 +16,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.persistence.Tuple;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
@@ -79,4 +81,31 @@ public interface EmployeeDao extends BaseDao<Employee> {
     List<UserConstructWithEmployee> findByDeptId1(Long deptId);
 
     <T> List<T> findByAgeGreaterThan(int age, Class<T> tClass);
+
+    // 试图用接口接收native sql结果，但是不成功，报没有转换器错误 No converter found capable of converting from type
+    @Query(value = "select e.id as id, e.name as name, e.age as age, d.id as departmentId, d.name as departmentName " +
+            "from employee e, department d where e.departmentId = d.id and e.id = ?1", nativeQuery = true)
+    MyEmployee findByIdWithDepartmentUseNativeSqlWithInterfaceBean(Long id);
+
+    // 试图用POJO来接收nativeSQL的结果，还是失败No converter found capable of converting from type
+    @Query(value = "select e.id as id, e.name as name, e.age as age, d.id as departmentId, d.name as departmentName " +
+            "from employee e, department d where e.departmentId = d.id and e.id = ?1", nativeQuery = true)
+    MyEmployeeDTO findByIdWithDepartmentUseNativeSqlWithoutInterfaceBean(Long id);
+
+    // 视图动态投影的方式来处理，仍然失败
+    @Query(value = "select e.id as id, e.name as name, e.age as age, d.id as departmentId, d.name as departmentName " +
+            "from employee e, department d where e.departmentId = d.id and e.id = ?1", nativeQuery = true)
+    <T> T findByIdWithDepartmentUseNativeSqlWithClass(Long id, Class<T> tClass);
+
+    // 仍然转换失败
+    @Query(value = "select e.id as id, e.name as name, e.age as age, d.id as departmentId, d.name as departmentName " +
+            "from employee e, department d where e.departmentId = d.id and e.id = ?1", nativeQuery = true)
+    Map<String, Object> findByIdWithDepartmentUseNativeSqlWithMap(Long id);
+
+    @Query(value = "select e.id as id, e.name as name, e.age as age, d.id as departmentId, d.name as departmentName " +
+            "from employee e, department d where e.departmentId = d.id and e.id = ?1", nativeQuery = true)
+    List<Tuple> findByIdWithDepartmentUseNativeSqlWithTuple(Long id);
+
+    @Query(value = "select e.id as id, e.name as name, e.age as age from employee e where e.id = ?1", nativeQuery = true)
+    MyEmployee findByIdUseNativeSqlWithInterfaceBean(Long id);
 }
