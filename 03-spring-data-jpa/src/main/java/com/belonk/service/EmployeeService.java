@@ -14,10 +14,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.Tuple;
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -224,6 +226,38 @@ public class EmployeeService extends BaseService<Employee> {
 
     public List<UserConstructWithField1> queryByAgeGreaterThan1(int minAage) {
         return employeeDao.findByAgeGreaterThan(minAage, UserConstructWithField1.class);
+    }
+
+    public MyEmployee queryByIdWithDepartmentUseNativeSqlWithInterfaceBean(Long id) {
+        // 视图用接口来接收nativeSQL的结果，不成功，抛出org.springframework.core.convert.ConverterNotFoundException: No converter
+        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.domain.MyEmployee]
+        return employeeDao.findByIdWithDepartmentUseNativeSqlWithInterfaceBean(id);
+    }
+
+    public MyEmployeeDTO queryByIdWithDepartmentUseNativeSqlWithoutInterfaceBean(Long id) {
+        // 视图用接口来接收nativeSQL的结果，仍然不成功，抛出org.springframework.core.convert.ConverterNotFoundException: No converter
+        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.domain.MyEmployee]
+        return employeeDao.findByIdWithDepartmentUseNativeSqlWithoutInterfaceBean(id);
+    }
+
+    public MyEmployeeDTO queryByIdWithDepartmentUseNativeSqlWithClass(Long id) {
+        // 视图用接口来接收nativeSQL的结果，仍然不成功，抛出org.springframework.core.convert.ConverterNotFoundException: No converter
+        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.domain.MyEmployee]
+        return employeeDao.findByIdWithDepartmentUseNativeSqlWithClass(id, MyEmployeeDTO.class);
+    }
+
+    public MyEmployeeDTO queryByIdWithDepartmentUseNativeSqlWithMap(Long id) {
+        // 视图用接口来接收nativeSQL的结果，仍然不成功，抛出org.springframework.core.convert.ConversionFailedException
+        Map map = employeeDao.findByIdWithDepartmentUseNativeSqlWithMap(id);
+        System.out.println(map);
+        return null;
+    }
+
+    public MyEmployeeDTO queryByIdWithDepartmentUseNativeSqlWithTuple(Long id) {
+        // 视图用接口来接收nativeSQL的结果，仍然不成功，抛出org.springframework.core.convert.ConversionFailedException
+        List<Tuple> tuples = employeeDao.findByIdWithDepartmentUseNativeSqlWithTuple(id);
+        System.out.println(tuples);
+        return null;
     }
 
     /*
