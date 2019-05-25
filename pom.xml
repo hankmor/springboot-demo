@@ -13,6 +13,7 @@
         <module>05-template-engine-thymeleaf</module>
         <module>06-webapp-demo</module>
         <module>07-swagger</module>
+        <module>08-mybatis-plus</module>
         <module>09-druid-mybatis-fastjson</module>
         <module>10-redisson</module>
         <module>11-quartz</module>
