@@ -1,17 +1,7 @@
-package com.belonk.dao.impl;
+package com.belonk.pojo;
 
-import com.belonk.dao.CustomEmployeeDao;
-import com.belonk.pojo.MyEmployeeDTO;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.Query;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by sun on 2018/6/24.
@@ -20,8 +10,9 @@ import javax.persistence.Query;
  * @version 1.0
  * @since 1.0
  */
-@Repository
-public class CustomEmployeeDaoImpl implements CustomEmployeeDao {
+@Data
+@EqualsAndHashCode
+public class MyEmployeeDTO {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -40,8 +31,10 @@ public class CustomEmployeeDaoImpl implements CustomEmployeeDao {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @PersistenceUnit
-    private EntityManagerFactory emFactory;
+    private Long id;
+    private String name;
+    private Long deptId;
+    private String deptName;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,7 +44,15 @@ public class CustomEmployeeDaoImpl implements CustomEmployeeDao {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    public MyEmployeeDTO() {
+    }
 
+    public MyEmployeeDTO(Long id, String name, Long deptId, String deptName) {
+        this.id = id;
+        this.name = name;
+        this.deptId = deptId;
+        this.deptName = deptName;
+    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,26 +62,7 @@ public class CustomEmployeeDaoImpl implements CustomEmployeeDao {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Override
-    public MyEmployeeDTO findByIdWithDepartment(Long id) {
-        String sql = "select e.id id, e.name name, d.id 'deptId', d.name 'deptName' " +
-                "from employee e left join department d on e.departmentId = d.id " +
-                "where e.id = :id";
-        EntityManager em = emFactory.createEntityManager();
-        Query query = em.createNativeQuery(sql);
-        query.setParameter("id", id);
-        SQLQuery sqlQuery = query.unwrap(SQLQuery.class);
-        sqlQuery.addScalar("id", LongType.INSTANCE);
-        sqlQuery.addScalar("deptId", LongType.INSTANCE);
-        sqlQuery.addScalar("name", StringType.INSTANCE);
-        sqlQuery.addScalar("deptName");
-        sqlQuery.setResultTransformer(
-                Transformers.aliasToBean(MyEmployeeDTO.class)
-        );
-        MyEmployeeDTO employee = (MyEmployeeDTO) sqlQuery.uniqueResult();
-        em.close();
-        return employee;
-    }
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

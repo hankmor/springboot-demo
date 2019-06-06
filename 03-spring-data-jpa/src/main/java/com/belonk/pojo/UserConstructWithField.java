@@ -1,6 +1,5 @@
-package com.belonk.domain;
+package com.belonk.pojo;
 
-import com.belonk.entity.Employee;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -1,4 +1,4 @@
-package com.belonk.domain;
+package com.belonk.pojo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

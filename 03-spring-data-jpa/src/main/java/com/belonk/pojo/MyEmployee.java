@@ -1,4 +1,4 @@
-package com.belonk.domain;
+package com.belonk.pojo;
 
 /**
  * Created by sun on 2018/6/24.

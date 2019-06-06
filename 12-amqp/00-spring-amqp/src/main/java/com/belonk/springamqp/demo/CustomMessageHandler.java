@@ -1,19 +1,15 @@
-package com.belonk;
+package com.belonk.springamqp.demo;
 
-import com.belonk.rabbit.BasicJsonMessageDemo;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.amqp.core.Message;
 
 /**
- * Created by sun on 2019/3/20.
+ * Created by sun on 2019/6/6.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@SpringBootApplication
-public class RabbitMQJsonMessageApplication {
+public class CustomMessageHandler {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -52,18 +48,16 @@ public class RabbitMQJsonMessageApplication {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static void main(String[] args) throws Exception {
-        ConfigurableApplicationContext ctx = SpringApplication.run(RabbitMQJsonMessageApplication.class, args);
+    public void handleMessage(Message message) {
+        System.err.println("Handler Message : " + message);
+    }
 
-        // json message demo
+    public void handleMessage(Object message) {
+        System.err.println("Handler Object : " + message);
+    }
 
-        // JsonMessageDemo jsonMessageDemo = ctx.getBean(JsonMessageDemo.class);
-        // jsonMessageDemo.runDemo();
-
-        BasicJsonMessageDemo jsonMessageDemo = ctx.getBean(BasicJsonMessageDemo.class);
-        jsonMessageDemo.runDemo();
-
-        // ctx.close();
+    public void handleMessage(String message) {
+        System.err.println("Handler String : " + message);
     }
 
     /*
