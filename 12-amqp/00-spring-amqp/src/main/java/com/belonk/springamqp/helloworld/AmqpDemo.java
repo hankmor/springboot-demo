@@ -1,19 +1,27 @@
-package com.belonk;
+package com.belonk.springamqp.helloworld;
 
-import com.belonk.rabbit.BasicJsonMessageDemo;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import com.belonk.springamqp.config.RabbitConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
- * Created by sun on 2019/3/20.
+ * Created by sun on 2019/6/5.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@SpringBootApplication
-public class RabbitMQJsonMessageApplication {
+@Component
+@RabbitListener(queues = RabbitConfiguration.QUEUE_NAME)
+public class AmqpDemo {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -22,7 +30,7 @@ public class RabbitMQJsonMessageApplication {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    private static Logger log = LoggerFactory.getLogger(AmqpDemo.class);
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,7 +40,8 @@ public class RabbitMQJsonMessageApplication {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,18 +61,30 @@ public class RabbitMQJsonMessageApplication {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static void main(String[] args) throws Exception {
-        ConfigurableApplicationContext ctx = SpringApplication.run(RabbitMQJsonMessageApplication.class, args);
+    public void runDemo(Object msg) {
+        amqpTemplate.convertAndSend(RabbitConfiguration.QUEUE_NAME, msg);
+        System.out.println("Sent : " + msg);
+    }
 
-        // json message demo
+    // 接收body为String类型的消息
 
-        // JsonMessageDemo jsonMessageDemo = ctx.getBean(JsonMessageDemo.class);
-        // jsonMessageDemo.runDemo();
+    @RabbitHandler
+    public void process(String msg) {
+        System.out.println("Received : " + msg.getClass());
+    }
 
-        BasicJsonMessageDemo jsonMessageDemo = ctx.getBean(BasicJsonMessageDemo.class);
-        jsonMessageDemo.runDemo();
+    // 接收body为List类型的参数
 
-        // ctx.close();
+    @RabbitHandler
+    public void process(List msg) {
+        System.out.println("Received : " + msg.getClass());
+    }
+
+    //
+
+    @RabbitHandler
+    public void process(Message msg) {
+        System.out.println("Received : " + msg.getClass());
     }
 
     /*

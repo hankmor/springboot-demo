@@ -1,19 +1,13 @@
-package com.belonk;
-
-import com.belonk.rabbit.BasicJsonMessageDemo;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+package com.belonk.pojo;
 
 /**
- * Created by sun on 2019/3/20.
+ * Created by sun on 2019/6/4.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@SpringBootApplication
-public class RabbitMQJsonMessageApplication {
+public class Foo {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -32,7 +26,7 @@ public class RabbitMQJsonMessageApplication {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-
+    private String foo;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,7 +36,13 @@ public class RabbitMQJsonMessageApplication {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    public Foo() {
+        super();
+    }
 
+    public Foo(String foo) {
+        this.foo = foo;
+    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,18 +52,17 @@ public class RabbitMQJsonMessageApplication {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static void main(String[] args) throws Exception {
-        ConfigurableApplicationContext ctx = SpringApplication.run(RabbitMQJsonMessageApplication.class, args);
+    public String getFoo() {
+        return this.foo;
+    }
 
-        // json message demo
+    public void setFoo(String foo) {
+        this.foo = foo;
+    }
 
-        // JsonMessageDemo jsonMessageDemo = ctx.getBean(JsonMessageDemo.class);
-        // jsonMessageDemo.runDemo();
-
-        BasicJsonMessageDemo jsonMessageDemo = ctx.getBean(BasicJsonMessageDemo.class);
-        jsonMessageDemo.runDemo();
-
-        // ctx.close();
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [foo=" + this.foo + "]";
     }
 
     /*

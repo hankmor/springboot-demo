@@ -1,19 +1,22 @@
-package com.belonk;
+package com.belonk.springamqp.demo;
 
-import com.belonk.rabbit.BasicJsonMessageDemo;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import com.belonk.springamqp.config.RabbitConfiguration;
+import com.rabbitmq.client.Channel;
+import org.springframework.amqp.core.AcknowledgeMode;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 
 /**
- * Created by sun on 2019/3/20.
+ * Created by sun on 2019/6/6.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-@SpringBootApplication
-public class RabbitMQJsonMessageApplication {
+public class AsyncManualAckDemo {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -52,18 +55,30 @@ public class RabbitMQJsonMessageApplication {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static void main(String[] args) throws Exception {
-        ConfigurableApplicationContext ctx = SpringApplication.run(RabbitMQJsonMessageApplication.class, args);
+    public static void main(String[] args) {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory("192.168.0.27", 5672);
+        connectionFactory.setUsername("admin");
+        connectionFactory.setPassword("123456");
 
-        // json message demo
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
+        container.setConcurrentConsumers(1);
+        // 手动确认消息
+        container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        container.setQueueNames(RabbitConfiguration.QUEUE_NAME);
+        // 这里使用ChannelAwareMessageListener以获得Channel来进行手动确认
+        container.setMessageListener(new ChannelAwareMessageListener() {
+            @Override
+            public void onMessage(Message message, Channel channel) throws Exception {
+                System.err.println("Received : " + message);
+                // 手动确认，不确认会导致消息一直重发
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            }
+        });
+        container.start();
 
-        // JsonMessageDemo jsonMessageDemo = ctx.getBean(JsonMessageDemo.class);
-        // jsonMessageDemo.runDemo();
-
-        BasicJsonMessageDemo jsonMessageDemo = ctx.getBean(BasicJsonMessageDemo.class);
-        jsonMessageDemo.runDemo();
-
-        // ctx.close();
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.convertAndSend(RabbitConfiguration.QUEUE_NAME, "foo");
+        template.convertAndSend(RabbitConfiguration.QUEUE_NAME, "bar");
     }
 
     /*

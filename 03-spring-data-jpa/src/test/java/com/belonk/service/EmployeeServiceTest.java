@@ -2,7 +2,7 @@ package com.belonk.service;
 
 import com.belonk.BaseTest;
 import com.belonk.common.util.JsonUtil;
-import com.belonk.domain.*;
+import com.belonk.pojo.*;
 import com.belonk.entity.Department;
 import com.belonk.entity.Employee;
 import com.belonk.entity.Gender;
