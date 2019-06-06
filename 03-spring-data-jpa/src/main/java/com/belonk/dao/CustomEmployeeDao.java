@@ -1,6 +1,6 @@
 package com.belonk.dao;
 
-import com.belonk.domain.MyEmployeeDTO;
+import com.belonk.pojo.MyEmployeeDTO;
 
 /**
  * Created by sun on 2018/6/24.

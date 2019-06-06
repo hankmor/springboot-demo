@@ -2,7 +2,7 @@ package com.belonk.service;
 
 import com.belonk.dao.CustomEmployeeDao;
 import com.belonk.dao.EmployeeDao;
-import com.belonk.domain.*;
+import com.belonk.pojo.*;
 import com.belonk.entity.Department;
 import com.belonk.entity.Employee;
 import com.belonk.entity.Gender;
@@ -230,19 +230,19 @@ public class EmployeeService extends BaseService<Employee> {
 
     public MyEmployee queryByIdWithDepartmentUseNativeSqlWithInterfaceBean(Long id) {
         // 视图用接口来接收nativeSQL的结果，不成功，抛出org.springframework.core.convert.ConverterNotFoundException: No converter
-        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.domain.MyEmployee]
+        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.pojo.MyEmployee]
         return employeeDao.findByIdWithDepartmentUseNativeSqlWithInterfaceBean(id);
     }
 
     public MyEmployeeDTO queryByIdWithDepartmentUseNativeSqlWithoutInterfaceBean(Long id) {
         // 视图用接口来接收nativeSQL的结果，仍然不成功，抛出org.springframework.core.convert.ConverterNotFoundException: No converter
-        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.domain.MyEmployee]
+        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.pojo.MyEmployee]
         return employeeDao.findByIdWithDepartmentUseNativeSqlWithoutInterfaceBean(id);
     }
 
     public MyEmployeeDTO queryByIdWithDepartmentUseNativeSqlWithClass(Long id) {
         // 视图用接口来接收nativeSQL的结果，仍然不成功，抛出org.springframework.core.convert.ConverterNotFoundException: No converter
-        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.domain.MyEmployee]
+        // found capable of converting from type [java.math.BigInteger] to type [com.belonk.pojo.MyEmployee]
         return employeeDao.findByIdWithDepartmentUseNativeSqlWithClass(id, MyEmployeeDTO.class);
     }
 
