@@ -9,6 +9,8 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 
+import java.util.UUID;
+
 /**
  * Created by sun on 2019/6/5.
  *
@@ -72,32 +74,39 @@ public class ConfirmAndReturnDemo {
         // 设置为true，则消息改为手动返回
         template.setMandatory(true);
         // 设置消息返回回调，一个RabbitTemplate只能设置一次返回回调
-        // 当消息不能成功投递到一个队列中，会抛出AmqpMessageReturnedException，该异常包含ReturnCallback所需的参数信息，此时会执行回调
+        // 当消息不能成功投递，会抛出AmqpMessageReturnedException，该异常包含ReturnCallback所需的参数信息，此时会执行回调
         template.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
-            System.err.println("Message returned : ");
+            System.err.println("Return callback : ");
             System.err.println("    message : " + message);
-            System.err.println("    replay  : " + replyCode + ", " + replyText);
+            System.err.println("    reply   : " + replyCode + ", " + replyText);
         });
         // 消息确认回调，一个RabbitTemplate只能设置一次确认回调
         template.setConfirmCallback((correlationData, ack, cause) -> {
-            System.err.println("Message confirmed : ");
+            System.err.println("Confirm callback : ");
             System.err.println("    correlationData : " + correlationData);
             System.err.println("    ack   : " + ack);
             System.err.println("    cause : " + cause);
         });
 
         String str = "this is foo.";
-        CorrelationData correlationData = new CorrelationData();
-        template.convertAndSend(queue.getName(), (Object) str, correlationData);
+        template.convertAndSend(queue.getName(), (Object) str, new CorrelationData(UUID.randomUUID().toString()));
         System.err.println("Send : " + str);
         String foo = (String) template.receiveAndConvert(queue.getName());
         System.err.println("Received : " + foo);
 
         User user = new User("zhangsan");
-        template.convertAndSend(queue.getName(), user);
+        template.convertAndSend(queue.getName(), user, new CorrelationData(UUID.randomUUID().toString()));
         System.err.println("Send : " + user);
         User receivedUser = (User) template.receiveAndConvert(queue.getName());
         System.err.println("Received : " + receivedUser);
+
+        // 不能成功投递消息
+        System.err.println("Mock message body can't be sent.");
+        str = "can not be sent.";
+        // routing key无法匹配，则confirmCallback和returnCallback都会被触发，ack仍然为true
+        template.convertAndSend("dontExist.exchange", (Object) str, new CorrelationData(UUID.randomUUID().toString()));
+        // exchange找不到，则会触发confirmCallback，但是returnCallback不会被触发，ack为false，cause包含异常信息，此时channel会关闭
+        template.convertAndSend("dontExist.exchange", "dontExist.routingKey", str, new CorrelationData(UUID.randomUUID().toString()));
     }
 
 
