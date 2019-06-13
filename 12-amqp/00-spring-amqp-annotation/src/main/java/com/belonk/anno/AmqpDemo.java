@@ -1,6 +1,6 @@
-package com.belonk.springamqp.helloworld;
+package com.belonk.anno;
 
-import com.belonk.springamqp.config.RabbitConfiguration;
+import com.belonk.config.RabbitConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;

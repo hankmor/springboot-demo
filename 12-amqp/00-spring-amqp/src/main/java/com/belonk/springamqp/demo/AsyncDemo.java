@@ -1,10 +1,6 @@
 package com.belonk.springamqp.demo;
 
-import com.belonk.springamqp.config.RabbitConfiguration;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageListener;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -61,9 +57,13 @@ public class AsyncDemo {
         connectionFactory.setUsername("admin");
         connectionFactory.setPassword("123456");
 
+        Queue queue = new AnonymousQueue();
+        AmqpAdmin admin = new RabbitAdmin(connectionFactory);
+        admin.declareQueue(queue);
+
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setConcurrentConsumers(1);
-        container.setQueueNames(RabbitConfiguration.QUEUE_NAME);
+        container.setQueueNames(queue.getName());
         container.setMessageListener(new MessageListener() {
             @Override
             public void onMessage(Message message) {
@@ -75,7 +75,7 @@ public class AsyncDemo {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
 
         String str = "this is foo.";
-        template.convertAndSend(RabbitConfiguration.QUEUE_NAME, str);
+        template.convertAndSend(queue.getName(), str);
         System.out.println("Send : " + str);
     }
 

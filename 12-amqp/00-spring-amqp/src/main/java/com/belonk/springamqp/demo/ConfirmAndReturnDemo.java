@@ -1,22 +1,22 @@
 package com.belonk.springamqp.demo;
 
-import com.belonk.springamqp.config.RabbitConfiguration;
 import com.belonk.springamqp.domain.User;
-import org.springframework.amqp.core.Address;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.ReceiveAndReplyCallback;
-import org.springframework.amqp.core.ReplyToAddressCallback;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.AnonymousQueue;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.support.CorrelationData;
 
 /**
- * Created by sun on 2019/6/6.
+ * Created by sun on 2019/6/5.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
  * @since 1.0
  */
-public class SendAndReceiveDemo {
+public class ConfirmAndReturnDemo {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -60,36 +60,46 @@ public class SendAndReceiveDemo {
         connectionFactory.setUsername("admin");
         connectionFactory.setPassword("123456");
 
+        // 开启消息确认和回调
+        connectionFactory.setPublisherConfirms(true);
+        connectionFactory.setPublisherReturns(true);
+
+        Queue queue = new AnonymousQueue();
+        AmqpAdmin admin = new RabbitAdmin(connectionFactory);
+        admin.declareQueue(queue);
+
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        // 设置为true，则消息改为手动返回
+        template.setMandatory(true);
+        // 设置消息返回回调，一个RabbitTemplate只能设置一次返回回调
+        // 当消息不能成功投递到一个队列中，会抛出AmqpMessageReturnedException，该异常包含ReturnCallback所需的参数信息，此时会执行回调
+        template.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
+            System.err.println("Message returned : ");
+            System.err.println("    message : " + message);
+            System.err.println("    replay  : " + replyCode + ", " + replyText);
+        });
+        // 消息确认回调，一个RabbitTemplate只能设置一次确认回调
+        template.setConfirmCallback((correlationData, ack, cause) -> {
+            System.err.println("Message confirmed : ");
+            System.err.println("    correlationData : " + correlationData);
+            System.err.println("    ack   : " + ack);
+            System.err.println("    cause : " + cause);
+        });
 
-        template.convertAndSend(RabbitConfiguration.QUEUE_NAME, new User("李四"));
-        // 接收消息并直接转换为对象，等待2秒
-        User user = (User) template.receiveAndConvert(RabbitConfiguration.QUEUE_NAME, 1000 * 2);
-        System.err.println("Received : " + user);
+        String str = "this is foo.";
+        CorrelationData correlationData = new CorrelationData();
+        template.convertAndSend(queue.getName(), (Object) str, correlationData);
+        System.err.println("Send : " + str);
+        String foo = (String) template.receiveAndConvert(queue.getName());
+        System.err.println("Received : " + foo);
 
-        template.convertAndSend(RabbitConfiguration.QUEUE_NAME, new User("王五"));
-        // 接收消息并直接转换为对象，等待2秒
-        boolean received = template.receiveAndReply(RabbitConfiguration.QUEUE_NAME,
-                // 回复回调
-                new ReceiveAndReplyCallback<User, User>() {
-                    @Override
-                    public User handle(User payload) {
-                        System.out.println("Handle : " + payload);
-                        payload.setName("王五改名了");
-                        return payload;
-                    }
-                },
-                // 设置回复地址
-                new ReplyToAddressCallback<User>() {
-                    @Override
-                    public Address getReplyToAddress(Message request, User reply) {
-                        System.err.println("Reply : " + reply);
-                        return new Address("", RabbitConfiguration.QUEUE_NAME);
-                    }
-                }
-        );
-        System.err.println("Received : " + received);
+        User user = new User("zhangsan");
+        template.convertAndSend(queue.getName(), user);
+        System.err.println("Send : " + user);
+        User receivedUser = (User) template.receiveAndConvert(queue.getName());
+        System.err.println("Received : " + receivedUser);
     }
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

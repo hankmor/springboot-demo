@@ -1,11 +1,10 @@
 package com.belonk.springamqp.demo;
 
-import com.belonk.springamqp.config.RabbitConfiguration;
 import com.rabbitmq.client.Channel;
-import org.springframework.amqp.core.AcknowledgeMode;
-import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 
@@ -60,11 +59,15 @@ public class AsyncManualAckDemo {
         connectionFactory.setUsername("admin");
         connectionFactory.setPassword("123456");
 
+        Queue queue = new AnonymousQueue();
+        AmqpAdmin admin = new RabbitAdmin(connectionFactory);
+        admin.declareQueue(queue);
+
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setConcurrentConsumers(1);
         // 手动确认消息
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
-        container.setQueueNames(RabbitConfiguration.QUEUE_NAME);
+        container.setQueueNames(queue.getName());
         // 这里使用ChannelAwareMessageListener以获得Channel来进行手动确认
         container.setMessageListener(new ChannelAwareMessageListener() {
             @Override
@@ -77,8 +80,8 @@ public class AsyncManualAckDemo {
         container.start();
 
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.convertAndSend(RabbitConfiguration.QUEUE_NAME, "foo");
-        template.convertAndSend(RabbitConfiguration.QUEUE_NAME, "bar");
+        template.convertAndSend(queue.getName(), "foo");
+        template.convertAndSend(queue.getName(), "bar");
     }
 
     /*
