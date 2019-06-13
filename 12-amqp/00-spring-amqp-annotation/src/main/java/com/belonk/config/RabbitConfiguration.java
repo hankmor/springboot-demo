@@ -1,4 +1,4 @@
-package com.belonk.springamqp.config;
+package com.belonk.config;
 
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.AnonymousQueue;
