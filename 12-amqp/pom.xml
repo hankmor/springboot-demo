@@ -17,6 +17,7 @@
         <module>02-json-message</module>
         <module>03-confirm-return</module>
         <module>04-rabbit-web</module>
+        <module>00-spring-amqp-annotation</module>
     </modules>
     <description>Rabbitmq demo for Spring Boot</description>
 
