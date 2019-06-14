@@ -1,9 +1,6 @@
 package com.belonk;
 
-import com.belonk.anno.HelloWorldDemo;
-import com.belonk.anno.MultiHandlerDemo;
-import com.belonk.anno.ReceiveWithHeaderDemo;
-import com.belonk.anno.ReceiveWithPayloadDemo;
+import com.belonk.anno.*;
 import com.belonk.domain.User;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +16,7 @@ public class SpringAmqpApplication {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(SpringAmqpApplication.class, args);
 
-        // demo1
+        /*// demo1
         HelloWorldDemo helloWorldDemo = context.getBean(HelloWorldDemo.class);
         helloWorldDemo.send("hello world!");
         helloWorldDemo.send("hi, belonk!");
@@ -36,6 +33,9 @@ public class SpringAmqpApplication {
         multiHandlerDemo.runDemo(new ArrayList<>());
         multiHandlerDemo.runDemo(new User("李四"));
         // 错误，无法（反）序列化，必须实现Serializable接口
-        // multiHandlerDemo.runDemo(new Object());
+        // multiHandlerDemo.runDemo(new Object());*/
+        // demo5
+        ConfirmAndReturnDemo confirmAndReturnDemo = context.getBean(ConfirmAndReturnDemo.class);
+        confirmAndReturnDemo.send(new User("王五"));
     }
 }
