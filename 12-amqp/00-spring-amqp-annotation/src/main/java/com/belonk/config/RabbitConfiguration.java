@@ -29,7 +29,11 @@ public class RabbitConfiguration {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static final String QUEUE_NAME = "spring.amqp.demo";
+    public static final String QUEUE_NAME = "spring.amqp.demo.queue";
+    public static final String ANONYMOUS_QUEUE_NAME = "spring.amqp.anonymous.queue";
+    public static final String ANONYMOUS_QUEUE_NAME_1 = "spring.amqp.anonymous.queue1";
+    public static final String ANONYMOUS_QUEUE_NAME_2 = "spring.amqp.anonymous.queue2";
+    public static final String ANONYMOUS_QUEUE_NAME_3 = "spring.amqp.anonymous.queue3";
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,9 +69,9 @@ public class RabbitConfiguration {
         cachingConnectionFactory.setUsername("admin");
         cachingConnectionFactory.setPassword("123456");
         // 消息确认
-        cachingConnectionFactory.setPublisherConfirms(true);
+        // cachingConnectionFactory.setPublisherConfirms(true);
         // 消息返回
-        cachingConnectionFactory.setPublisherReturns(true);
+        // cachingConnectionFactory.setPublisherReturns(true);
         return cachingConnectionFactory;
     }
 
@@ -78,6 +82,11 @@ public class RabbitConfiguration {
 
     @Bean
     public RabbitTemplate rabbitTemplate() {
+        return new RabbitTemplate(connectionFactory());
+    }
+
+    @Bean
+    public RabbitTemplate callbackRabbitTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
         // 消息返回
         rabbitTemplate.setMandatory(true);
@@ -99,9 +108,29 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Queue myQueue() {
-        // 自动删除队列
-        return new AnonymousQueue(() -> QUEUE_NAME);
+    public Queue anonymousQueue() {
+        // 匿名队列
+        return new AnonymousQueue(() -> ANONYMOUS_QUEUE_NAME);
+    }
+
+    @Bean
+    public Queue anonymousQueue1() {
+        return new AnonymousQueue(() -> ANONYMOUS_QUEUE_NAME_1);
+    }
+
+    @Bean
+    public Queue anonymousQueue2() {
+        return new AnonymousQueue(() -> ANONYMOUS_QUEUE_NAME_2);
+    }
+
+    @Bean
+    public Queue anonymousQueue3() {
+        return new AnonymousQueue(() -> ANONYMOUS_QUEUE_NAME_3);
+    }
+
+    @Bean
+    public Queue queue() {
+        return new Queue(QUEUE_NAME);
     }
 
     /*
