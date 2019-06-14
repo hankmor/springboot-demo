@@ -1,5 +1,6 @@
 package com.belonk.config;
 
+import com.belonk.util.Printer;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.AnonymousQueue;
 import org.springframework.amqp.core.Message;
@@ -34,6 +35,7 @@ public class RabbitConfiguration {
     public static final String ANONYMOUS_QUEUE_NAME_1 = "spring.amqp.anonymous.queue1";
     public static final String ANONYMOUS_QUEUE_NAME_2 = "spring.amqp.anonymous.queue2";
     public static final String ANONYMOUS_QUEUE_NAME_3 = "spring.amqp.anonymous.queue3";
+    public static final String ANONYMOUS_QUEUE_NAME_4 = "spring.amqp.anonymous.queue4";
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,9 +71,9 @@ public class RabbitConfiguration {
         cachingConnectionFactory.setUsername("admin");
         cachingConnectionFactory.setPassword("123456");
         // 消息确认
-        // cachingConnectionFactory.setPublisherConfirms(true);
+        cachingConnectionFactory.setPublisherConfirms(true);
         // 消息返回
-        // cachingConnectionFactory.setPublisherReturns(true);
+        cachingConnectionFactory.setPublisherReturns(true);
         return cachingConnectionFactory;
     }
 
@@ -94,14 +96,14 @@ public class RabbitConfiguration {
         rabbitTemplate.setReturnCallback(new RabbitTemplate.ReturnCallback() {
             @Override
             public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
-                System.out.println("Message returned : " + replyCode + ", " + replyText);
+                Printer.p("Message returned : " + replyCode + ", " + replyText);
             }
         });
         // 消息确认回调，一个RabbitTemplate只能设置一次确认回调
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
             @Override
             public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-                System.out.println("Message confirmed : " + ack + ", " + cause + ", " + correlationData);
+                Printer.p("Message confirmed : " + ack + ", " + cause + ", " + correlationData);
             }
         });
         return rabbitTemplate;
@@ -126,6 +128,11 @@ public class RabbitConfiguration {
     @Bean
     public Queue anonymousQueue3() {
         return new AnonymousQueue(() -> ANONYMOUS_QUEUE_NAME_3);
+    }
+
+    @Bean
+    public Queue anonymousQueue4() {
+        return new AnonymousQueue(() -> ANONYMOUS_QUEUE_NAME_4);
     }
 
     @Bean
