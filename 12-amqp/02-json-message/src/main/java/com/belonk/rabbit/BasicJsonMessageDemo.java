@@ -1,6 +1,7 @@
 package com.belonk.rabbit;
 
 import com.belonk.pojo.Foo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
