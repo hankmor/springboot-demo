@@ -2,10 +2,8 @@ package com.belonk.domain;
 
 import lombok.*;
 
-import java.io.Serializable;
-
 /**
- * Created by sun on 2019/6/14.
+ * Created by sun on 2019/6/17.
  *
  * @author sunfuchang03@126.com
  * @version 1.0
@@ -15,8 +13,9 @@ import java.io.Serializable;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class User implements Serializable {
+public class Dept {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *
@@ -37,6 +36,7 @@ public class User implements Serializable {
 
     @NonNull
     private String name;
+    private User manager;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
