@@ -23,7 +23,8 @@
         </encoder>
         <!--日志文件最大的大小-->
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>100M</MaxFileSize>
+            <!--测试无效-->
+            <MaxFileSize>10KB</MaxFileSize>
         </triggeringPolicy>
     </appender>
 
