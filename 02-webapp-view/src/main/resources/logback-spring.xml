@@ -23,12 +23,13 @@
         </encoder>
         <!--日志文件最大的大小-->
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>10MB</MaxFileSize>
+            <MaxFileSize>100M</MaxFileSize>
         </triggeringPolicy>
     </appender>
 
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
