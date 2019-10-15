@@ -8,15 +8,17 @@ singleServerConfig:
   retryInterval: 1500
   reconnectionTimeout: 3000
   failedAttempts: 3
-  password: null
+  password: hmp_uat
   subscriptionsPerConnection: 5
   clientName: null
-  address: "redis://192.168.0.18:6379"
+  address: "redis://192.168.0.31:6379"
   subscriptionConnectionMinimumIdleSize: 1
   subscriptionConnectionPoolSize: 50
   connectionMinimumIdleSize: 32
   connectionPoolSize: 64
   database: 0
   dnsMonitoringInterval: 5000
-threads: 0
-nettyThreads: 0
+#threads: 0
+#nettyThreads: 0
+# 监控锁的看门狗超时，默认30s，避免死锁
+lockWatchdogTimeout: 300000
