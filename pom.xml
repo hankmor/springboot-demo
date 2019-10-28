@@ -19,6 +19,9 @@
         <module>11-quartz</module>
         <module>common</module>
         <module>12-amqp</module>
+        <module>websocket</module>
+        <module>13-websocket</module>
+        <module>24-websocketstomp</module>
     </modules>
     <packaging>pom</packaging>
     <name>springboot-demo</name>
