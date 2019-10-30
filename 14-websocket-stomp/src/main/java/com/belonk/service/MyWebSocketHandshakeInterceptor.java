@@ -27,6 +27,7 @@ public class MyWebSocketHandshakeInterceptor extends HttpSessionHandshakeInterce
      */
 
     private static Logger log = LoggerFactory.getLogger(MyWebSocketHandshakeInterceptor.class);
+    public static final String WEB_SOCKET_USER_NAME = "web_socket_user_name";
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,10 +61,9 @@ public class MyWebSocketHandshakeInterceptor extends HttpSessionHandshakeInterce
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         log.info("Before handshake");
         if (request instanceof ServletServerHttpRequest) {
-            // 随机给一个id
             ServletServerHttpRequest servletServerHttpRequest = (ServletServerHttpRequest) request;
             String userName = (String) servletServerHttpRequest.getServletRequest().getSession().getAttribute("userName");
-            attributes.put(MyWebsSocketHandler.WEB_SOCKET_USER_NAME, userName);
+            attributes.put(WEB_SOCKET_USER_NAME, userName);
         }
         return super.beforeHandshake(request, response, wsHandler, attributes);
     }

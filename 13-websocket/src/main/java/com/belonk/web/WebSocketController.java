@@ -55,11 +55,6 @@ public class WebSocketController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @RequestMapping
-    public String home() {
-        return "index";
-    }
-
     @RequestMapping("/username")
     @ResponseBody
     public void setName(HttpSession session, String userName) {
