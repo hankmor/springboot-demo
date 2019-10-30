@@ -60,7 +60,6 @@ public class MyWebSocketHandshakeInterceptor extends HttpSessionHandshakeInterce
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         log.info("Before handshake");
         if (request instanceof ServletServerHttpRequest) {
-            // 随机给一个id
             ServletServerHttpRequest servletServerHttpRequest = (ServletServerHttpRequest) request;
             String userName = (String) servletServerHttpRequest.getServletRequest().getSession().getAttribute("userName");
             attributes.put(MyWebsSocketHandler.WEB_SOCKET_USER_NAME, userName);

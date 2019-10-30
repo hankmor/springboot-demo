@@ -27,7 +27,7 @@
         </div>
     </div>
 </div>
-<script src="../assets/jquery-2.1.0.min.js"></script>
+<script src="./assets/jquery-2.1.0.min.js"></script>
 <script type="application/javascript">
     $(function () {
         var $username = $('#username');
@@ -54,7 +54,7 @@
         });
 
         function connect() {
-            ws = new WebSocket('ws://192.168.0.201:8080/chatroom');
+            ws = new WebSocket('ws://localhost:8081/chatroom');
             ws.onopen = function (data) {
                 console.log(data);
             };

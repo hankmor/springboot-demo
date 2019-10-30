@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>WebSocket chatroom</title>
+</head>
+<body>
+<h1>WebSocket chatroom</h1>
+<br/>
+<div style="background-color: #eeeeee;width: 600px;height: 300px;margin: 0 auto;border: 1px solid #ccc;">
+    <div style="margin: 10px">
+        <label>用户名：</label>
+        <input id="username" style="width: 50%;"/>
+        <button id="connect">连接</button>
+    </div>
+    <hr>
+    <div>
+        <label>聊天室</label>
+        <div id="message"
+             style="height: 200px;width: 99%; overflow-y: scroll;word-break: break-word;border: 1px solid #ccc;"></div>
+    </div>
+    <div>
+        <label>对话人：</label><input id="oneUser" style="width: 50%;"/>
+        <button id="oneUserChat">单聊</button>
+        <br>
+        <div id="oneUserMsg"
+             style="height: 60px;width: 99%; overflow-y: scroll;word-break: break-word;border: 1px solid #ccc;"></div>
+        <hr>
+        <label>消息内容：</label>
+        <input id="content" style="width: 100%; height: 50px;"/>
+        <div style="float: right;text-align: right">
+            <button id="send" disabled>发送</button>
+        </div>
+    </div>
+</div>
+<!--jquery-->
+<script src="https://cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<!--stomp js-->
+<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>
+<!--sockjs-client-->
+<script src="https://cdn.bootcss.com/sockjs-client/1.4.0/sockjs.js"></script>
+<script type="application/javascript">
+    $(function () {
+        var $username = $('#username');
+        var $send = $('#send');
+        var $connect = $('#connect');
+        var $message = $('#message');
+        var $oneuser = $('#oneUser');
+        var $oneuserMsg = $('#oneUserMsg');
+        var $oneUserChat = $('#oneUserChat');
+        var $content = $('#content');
+        var connected = false;
+        var oneUserChat = false;
+        var ws;
+
+        $connect.click(function () {
+            $.post('/app/username', {userName: $username.val()}, function () {
+                if (connected) {
+                    disconnect();
+                } else {
+                    if ($username.val())
+                        connect();
+                }
+            });
+        });
+
+        $send.click(function () {
+            if ($content.val())
+                send();
+        });
+
+        $oneUserChat.click(function () {
+            if (connected) {
+                $oneuser.prop('disabled', !oneUserChat);
+                oneUserChat = !oneUserChat;
+                if (oneUserChat) {
+                    $oneUserChat.text('退出单聊');
+                    // 订阅某一个人, 注意客户端订阅必须以/user开头，后台并没有
+                    ws.subscribe('/user/queue/' + $oneuser.val() + '/chat', function (data) {
+                        console.log(data);
+                        showOneUserMessage(data.body);
+                    });
+                    // ws.subscribe('/user/queue/chat', function (data) {
+                    //     console.log(data);
+                    //     showOneUserMessage(data.body);
+                    // });
+                } else {
+                    $oneUserChat.text('单聊');
+                    ws.unsubscribe('/user/queue/' + $oneuser.val() + '/chat', function (data) {
+                        console.log(data);
+                    });
+                    // ws.unsubscribe('/user/queue/chat', function (data) {
+                    //     console.log(data);
+                    // });
+                }
+            } else {
+                alert('请先链接');
+            }
+        });
+
+        function connect() {
+            // 参数为后端成功注册的端点地址
+            // 基于原生websocket
+            // var socket = new WebSocket("/websocket");
+            // 基于SocketJS
+            var socket = new SockJS('/websocket');
+            ws = Stomp.over(socket);
+            ws.connect({userName: $username.val()}, function (frame) {
+                setConnected(true);
+                console.log("connected : " + frame);
+
+                // 订阅聊天内容
+                ws.subscribe('/topic/chat', function (data) {
+                    console.log(data);
+                    showMessage(data.body);
+                });
+
+                // 订阅错误信息
+                ws.subscribe('/queue/errors', function (data) {
+                    console.log("error : " + data);
+                    showMessage(data.body);
+                });
+            }, function (error) {
+                console.log("STOMP error : " + error);
+            });
+        }
+
+        function disconnect() {
+            if (ws != null) {
+                ws.close();
+            }
+            setConnected(false);
+        }
+
+        function send() {
+            if (oneUserChat) {
+                ws.send('/app/say/' + $oneuser.val(), {}, $content.val());
+                $oneuserMsg.append("<br>" + dateFormat(new Date()) + " 你对" + $oneuser.val() + "说：" + $content.val())
+            } else {
+                ws.send('/app/say', {}, $content.val());
+            }
+        }
+
+        function setConnected(b) {
+            connected = b;
+            if (b) {
+                $send.removeAttr('disabled');
+                $connect.text('退出');
+            } else {
+                $send.attr('disabled', true);
+                $connect.text('连接');
+            }
+        }
+
+        function showMessage(message) {
+            $message.append("<br>" + message);
+        }
+
+        function showOneUserMessage(message) {
+            $oneuserMsg.append("<br>" + message);
+        }
+
+        function dateFormat(date) {
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+        }
+    });
+</script>
+</body>
+</html>
