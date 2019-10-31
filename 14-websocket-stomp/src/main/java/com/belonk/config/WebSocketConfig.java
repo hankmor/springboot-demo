@@ -1,7 +1,5 @@
 package com.belonk.config;
 
-import com.belonk.service.MyWebSocketHandshakeInterceptor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -76,7 +74,6 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 客户端连接的websocket握手地址（端点）
         registry.addEndpoint("/websocket")
-                .addInterceptors(new MyWebSocketHandshakeInterceptor())
                 // .setAllowedOrigins("*") // 设置允许的客户端请求源，默认只能在同域名下，不能跨域，设置为*可允许所有客户端请求
                 .withSockJS(); // 启用socketjs
     }

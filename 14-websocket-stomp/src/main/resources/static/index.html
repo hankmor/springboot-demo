@@ -54,14 +54,12 @@
         var ws;
 
         $connect.click(function () {
-            $.post('/app/username', {userName: $username.val()}, function () {
-                if (connected) {
-                    disconnect();
-                } else {
-                    if ($username.val())
-                        connect();
-                }
-            });
+            if (connected) {
+                disconnect();
+            } else {
+                if ($username.val())
+                    connect();
+            }
         });
 
         $send.click(function () {
@@ -98,6 +96,7 @@
             // 基于SocketJS
             var socket = new SockJS('/websocket');
             ws = Stomp.over(socket);
+            // 传递header信息，用来后台登录认证
             ws.connect({userName: $username.val()}, function (frame) {
                 setConnected(true);
                 console.log("connected : " + frame);
@@ -120,7 +119,7 @@
 
         function disconnect() {
             if (ws != null) {
-                ws.close();
+                ws.disconnect();
             }
             setConnected(false);
         }
