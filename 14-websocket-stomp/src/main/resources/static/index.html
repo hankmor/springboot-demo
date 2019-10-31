@@ -80,18 +80,11 @@
                         console.log(data);
                         showOneUserMessage(data.body);
                     });
-                    // ws.subscribe('/user/queue/chat', function (data) {
-                    //     console.log(data);
-                    //     showOneUserMessage(data.body);
-                    // });
                 } else {
                     $oneUserChat.text('单聊');
                     ws.unsubscribe('/user/queue/' + $oneuser.val() + '/chat', function (data) {
                         console.log(data);
                     });
-                    // ws.unsubscribe('/user/queue/chat', function (data) {
-                    //     console.log(data);
-                    // });
                 }
             } else {
                 alert('请先链接');
