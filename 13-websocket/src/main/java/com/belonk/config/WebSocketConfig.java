@@ -58,7 +58,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        // 注册处理器，并定义websocket处理的uri，在链接是需要指定该uri
         registry.addHandler(myHandler(), "/chatroom")
+                // 设置允许的域名
+                // .setAllowedOrigins()
+                // 添加请求拦截器
                 .addInterceptors(new MyWebSocketHandshakeInterceptor());
     }
 
