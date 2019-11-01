@@ -20,12 +20,12 @@
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-amqp</artifactId>
-            <version>1.7.6.RELEASE</version>
+            <version>1.7.10.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit</artifactId>
-            <version>1.7.6.RELEASE</version>
+            <version>1.7.10.RELEASE</version>
         </dependency>
     </dependencies>
 </project>
