@@ -37,7 +37,9 @@
         var $content = $('#content');
         var connected = false;
 
+        // 连接点击按钮
         $connect.click(function () {
+            // 发送给服务端输入的用户名
             $.post('/username', {userName: $username.val()}, function () {
                 if (connected) {
                     disconnect();
@@ -48,20 +50,25 @@
             });
         });
 
+        // 消息发送
         $send.click(function () {
             if ($content.val())
                 send();
         });
 
+        // websocket连接
         function connect() {
             ws = new WebSocket('ws://localhost:8081/chatroom');
+            // 连接建立事件
             ws.onopen = function (data) {
                 console.log(data);
             };
+            // 连接关闭事件
             ws.onclose = function (data) {
                 console.log(data);
             };
             ws.onmessage = function (data) {
+                // 展示收到的消息
                 showMessage(data.data);
             };
             setConnected(true);
