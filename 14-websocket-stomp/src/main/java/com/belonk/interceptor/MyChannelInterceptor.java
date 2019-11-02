@@ -5,6 +5,10 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import sun.security.acl.PrincipalImpl;
+
+import java.security.Principal;
 
 /**
  * 消息拦截器。
@@ -56,11 +60,18 @@ public class MyChannelInterceptor extends ChannelInterceptorAdapter {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         StompCommand command = accessor.getCommand();
         System.err.println("command : " + command);
         System.err.println("destination : " + accessor.getDestination());
-        return super.preSend(message, channel);
+        // 握手时客户端传递userName头信息来标识登录人
+        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            String userName = accessor.getNativeHeader("userName").get(0);
+            System.err.println("登录用户：" + userName);
+            Principal principal = new PrincipalImpl(userName);
+            accessor.setUser(principal);
+        }
+        return message;
     }
 
     @Override

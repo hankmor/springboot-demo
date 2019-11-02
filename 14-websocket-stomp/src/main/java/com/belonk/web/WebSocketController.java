@@ -25,7 +25,8 @@ import java.time.format.DateTimeFormatter;
  * @since 1.0
  */
 @Controller
-@RequestMapping("/app")
+// 没有必要指定/app，客户端发送￿消息时指定即可
+// @RequestMapping("/app")
 public class WebSocketController {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,15 +68,10 @@ public class WebSocketController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @RequestMapping("/username")
-    @ResponseBody
-    public void setName(HttpSession session, String userName) {
-        session.setAttribute("userName", userName);
-    }
-
     @RequestMapping("/hello")
     @ResponseBody
     public String customSendMsg(String name) {
+        // 手动发送消息
         simpMessagingTemplate.convertAndSend("/topic/chat", "hello, i am " + name);
         return "success";
     }

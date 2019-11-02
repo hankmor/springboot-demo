@@ -1,20 +1,12 @@
 package com.belonk.config;
 
+import com.belonk.interceptor.MyChannelInterceptor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.ChannelInterceptorAdapter;
-import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import sun.security.acl.PrincipalImpl;
-
-import java.security.Principal;
 
 /**
  * Created by sun on 2019/10/25.
@@ -24,7 +16,7 @@ import java.security.Principal;
  * @since 1.0
  */
 @Configuration
-// 开启使用STOMP协议来传输基于代理的消息
+// 启用STOMP协议消息代理来传递消息
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     /*
@@ -85,27 +77,19 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
+        // 启用简单消息代理，仅支持部分STOMP命令
         // 如果消息端点是/topic或/queue开头的，则直接转发给消息代理(内存或其他MQ，如RabbitMQ等)
         registry.enableSimpleBroker("/topic", "/queue");
+        // TODO 启用其他MQ(RabbitMQ、ActiveMQ等)消息代理，他们需要支持并启用STOMP
+        // registry.setPathMatcher(new AntPathMatcher("."));
+        // registry.enableStompBrokerRelay("/topic", "/queue");
         // 端点以app开头的消息将会自动路由给@MessageMapping标注的Controller方法上
         registry.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptorAdapter() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                // 握手时客户端传递userName头信息来标识登录人
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    String userName = accessor.getNativeHeader("userName").get(0);
-                    Principal principal = new PrincipalImpl(userName);
-                    accessor.setUser(principal);
-                }
-                return message;
-            }
-        });
+        registration.interceptors(new MyChannelInterceptor());
     }
 
     /*
