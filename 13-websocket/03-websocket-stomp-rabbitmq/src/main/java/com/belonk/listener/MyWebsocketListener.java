@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
-import java.io.UnsupportedEncodingException;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 /**
  * Created by sun on 2019/11/6.
@@ -38,8 +37,7 @@ public class MyWebsocketListener {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,32 +64,21 @@ public class MyWebsocketListener {
 
     @EventListener
     public void whenConnected(SessionConnectedEvent event) {
-        String user = event.getUser().getName();
-        String s = "用户" + user + "成功连入聊天室";
-        System.err.println(s);
-        simpMessagingTemplate.convertAndSend("/topic/chat", s);
+        System.err.println("connected");
     }
 
     @EventListener
     public void whenConnecting(SessionConnectEvent event) {
-        String user = event.getUser().getName();
-        System.err.println("用户" + user + "正在连入聊天室");
+        System.err.println("connecting");
+    }
+
+    @EventListener
+    public void whenSubscribe(SessionSubscribeEvent event) {
+        System.err.println("subscribe");
     }
 
     @EventListener
     public void whenDisconnected(SessionDisconnectEvent event) {
-        System.err.println("sessionId : " + event.getSessionId());
-        try {
-            System.err.println("message : " + new String(event.getMessage().getPayload(), "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        System.err.println("status : " + event.getCloseStatus());
-        String user = event.getUser().getName();
-        System.err.println("source : " + event.getSource());
-
-        String s = "用户" + user + "已经退出聊天室";
-        System.err.println(s);
-        simpMessagingTemplate.convertAndSend("/topic/chat", s);
+        System.err.println("disconnected");
     }
 }
