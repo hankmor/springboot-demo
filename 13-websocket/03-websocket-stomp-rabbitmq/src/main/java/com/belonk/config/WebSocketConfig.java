@@ -4,7 +4,6 @@ import com.belonk.interceptor.MyChannelInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -75,9 +74,10 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setPathMatcher(new AntPathMatcher("."))
-                .setApplicationDestinationPrefixes("/app")
-                .enableStompBrokerRelay("/exchange", "/topic", "/queue", "/qmp/queue")
+        registry
+                // .setPathMatcher(new AntPathMatcher("."))
+                .setApplicationDestinationPrefixes("/app");
+        registry.enableStompBrokerRelay("/exchange", "/topic", "/queue", "/qmp/queue")
                 .setRelayHost("192.168.0.27")
                 .setRelayPort(61613)
                 // 配置管理账号和密码，默认是guest/guest
