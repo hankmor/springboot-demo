@@ -32,7 +32,8 @@ public class WebSocketController {
     private static Logger log = LoggerFactory.getLogger(WebSocketController.class);
 
     public static final String EXCHANGE_TOPIC_NAME = "ws.rabbit.exchange.topic";
-    public static final String EXCHANGE_DIRECT_NAME = "ws.rabbit.exchange.direct";
+    public static final String QUEUE_NAME = "ws.rabbit.queue.destination";
+    public static final String AMQ_QUEUE_NAME = "ws.rabbit.amq.queue.destination";
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -63,22 +64,35 @@ public class WebSocketController {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    // 直接发消息到mq
+
     @RequestMapping("/send2mq")
     @ResponseBody
-    public void send(String routingkey, String content) {
-        rabbitTemplate.convertAndSend(EXCHANGE_TOPIC_NAME, routingkey, content);
+    public void send(String routingkey, String content, int type) {
+        switch (type) {
+            // /exchange
+            case 1:
+                rabbitTemplate.convertAndSend(EXCHANGE_TOPIC_NAME, routingkey, content);
+                break;
+            // /queue
+            case 2:
+                rabbitTemplate.convertAndSend("", QUEUE_NAME, content);
+                break;
+            // /amq/queue
+            case 3:
+                rabbitTemplate.convertAndSend("", AMQ_QUEUE_NAME, content);
+                break;
+            // /topic
+            case 4:
+                // rabbitTemplate.convertAndSend(QUEUE_NAME, routingkey, content);
+                break;
+            default:
+        }
     }
 
     // ~ /exchange测试
 
-    /*
-     * /exchange/<name>[/<pattern>]
-     *
-     * 1、首先需要自己在rabbitmq中创建一个topic类型的exchange
-     * 2、客户端订阅时，创建一个独占的、自动删除的队列，绑定到名称为<name>的交换机，如果<pattern>有值，则使用其作为key绑定到exchange，订阅创建的queue
-     * 这里客户端设置两个routing key：animal.*和animal.#
-     */
-
+    //先在mq创建一个topic类型的ws.rabbit.exchange.topic的exchange
 
     @MessageMapping("/send2mifei")
     @SendTo("/exchange/" + EXCHANGE_TOPIC_NAME + "/animal.rabbit.mifei")
@@ -94,14 +108,37 @@ public class WebSocketController {
 
     // ~ /queue测试
 
+    @MessageMapping("/queue")
+    @SendTo("/queue/" + QUEUE_NAME)
+    public String queue(String content) {
+        return "destination : " + "/queue/" + QUEUE_NAME + ", content : " + content;
+    }
 
     // ~ /amq/queue测试
 
+    // 先在mq中创建一个ws.rabbit.amq.queue.destination队列
+
+    @MessageMapping("/amq/queue")
+    @SendTo("/amq/queue/" + AMQ_QUEUE_NAME)
+    public String amqQueue(String content) {
+        return "destination : " + "/amq/queue/" + AMQ_QUEUE_NAME + ", content : " + content;
+    }
 
     // ~ /topic测试
 
+    @MessageMapping("/topic/debug")
+    @SendTo("/topic/" + "*.debug.*")
+    public String topicTest1(String content) {
+        return "destination : " + "/topic *.debug.*, content : " + content;
+    }
 
-    // ~ /temp-queue/测试
+    @MessageMapping("/topic/info")
+    @SendTo("/topic/" + "*.info.*")
+    public String topicTest2(String content) {
+        return "destination : " + "/topic *.info.*, content : " + content;
+    }
+
+    //todo ~ /temp-queue/测试
 
     @MessageExceptionHandler
     @SendTo("/queue/errors")

@@ -77,7 +77,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         registry
                 // .setPathMatcher(new AntPathMatcher("."))
                 .setApplicationDestinationPrefixes("/app");
-        registry.enableStompBrokerRelay("/exchange", "/topic", "/queue", "/qmp/queue")
+        registry.enableStompBrokerRelay("/exchange", "/topic", "/queue", "/amq/queue")
                 .setRelayHost("192.168.0.27")
                 .setRelayPort(61613)
                 // 配置管理账号和密码，默认是guest/guest
