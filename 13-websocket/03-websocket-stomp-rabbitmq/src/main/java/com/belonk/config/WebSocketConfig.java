@@ -80,10 +80,10 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         registry.enableStompBrokerRelay("/exchange", "/topic", "/queue", "/amq/queue")
                 .setRelayHost("192.168.0.27")
                 .setRelayPort(61613)
-                // 配置管理账号和密码，默认是guest/guest
+                // 配置发送消息到stomp代理的系统共享连接的账号密码，默认是guest/guest
                 .setSystemLogin("admin")
                 .setSystemPasscode("123456")
-                // 配置客户端账号和密码，默认是guest/guest
+                // 配置客户端连接到stomp代理的账号和密码，默认是guest/guest
                 .setClientLogin("admin")
                 .setClientPasscode("123456")
         ;
