@@ -14,49 +14,175 @@
         </section>
     </fieldset>
     <fieldset>
-        <legend>设置订阅地址</legend>
+        <legend>测试功能</legend>
         <section>
-            <label>订阅地址：</label>
-            <select id="subscribe-uri">
-                <option></option>
-                <option value="/exchange/ws.rabbit.exchange.topic/animal.#">
-                    /exchange/ws.rabbit.exchange.topic/animal.#
-                </option>
-                <option value="/exchange/ws.rabbit.exchange.topic/animal.*">
-                    /exchange/ws.rabbit.exchange.topic/animal.*
-                </option>
-            </select>
-            <button id="subscribe" disabled>订阅</button>
+            <button id="exchangeBtn">/exchange demo</button>
+            <button id="queueBtn">/queue demo</button>
+            <button id="amqQueueBtn">/amq/queue demo</button>
+            <button id="topicBtn">/topic demo</button>
         </section>
     </fieldset>
+    <div id="exchangeBtn_div" style="display: none;" class="demo_container">
+        <h2>/exchange demo</h2>
+        <fieldset>
+            <legend>设置订阅地址</legend>
+            <section>
+                <label>订阅地址：</label>
+                <select id="subscribe-uri">
+                    <option></option>
+                    <option value="/exchange/ws.rabbit.exchange.topic/animal.#">
+                        /exchange/ws.rabbit.exchange.topic/animal.#
+                    </option>
+                    <option value="/exchange/ws.rabbit.exchange.topic/animal.*">
+                        /exchange/ws.rabbit.exchange.topic/animal.*
+                    </option>
+                </select>
+                <button id="subscribe">订阅</button>
+            </section>
+        </fieldset>
+        <fieldset>
+            <legend>直接发送到MQ</legend>
+            <section>
+                <em>用来测试将消息发送到mq，各个客户端的接收情况</em><br>
+                <label>routing key：</label>
+                <select id="routingKey">
+                    <option></option>
+                    <option value="animal.#">animal.#</option>
+                    <option value="animal.*">animal.*</option>
+                </select>
+                <label>消息内容：</label>
+                <input id="contentMq" style="width: 40%;"/>
+                <button id="send2mq">发送到mq</button>
+            </section>
+        </fieldset>
+        <fieldset>
+            <legend>发送消息</legend>
+            <section>
+                <label>消息内容：</label>
+                <input id="content" style="width: 100%; height: 50px;"/>
+                <button id="send1">send2mifei</button>
+                <button id="send2">send2peppa</button>
+            </section>
+        </fieldset>
+    </div cla>
+    <div id="queueBtn_div" style="display: none;" class="demo_container">
+        <h2>/queue demo</h2>
+        <fieldset>
+            <legend>设置订阅地址</legend>
+            <section>
+                <label>订阅地址：</label>
+                <select id="subscribe-uri">
+                    <option value="/queue/ws.rabbit.queue.destination">
+                        /queue/ws.rabbit.queue.destination
+                    </option>
+                </select>
+                <button id="subscribe">订阅</button>
+            </section>
+        </fieldset>
+        <fieldset>
+            <legend>直接发送到MQ</legend>
+            <section>
+                <em>用来测试将消息发送到mq，各个客户端的接收情况</em><br>
+                <label>routing key：</label>
+                <select id="routingKey">
+                    <option></option>
+                </select>
+                <label>消息内容：</label>
+                <input id="contentMq" style="width: 40%;"/>
+                <button id="send2mq">发送到mq</button>
+            </section>
+        </fieldset>
+        <fieldset>
+            <legend>发送消息</legend>
+            <section>
+                <label>消息内容：</label>
+                <input id="content" style="width: 100%; height: 50px;"/>
+                <button id="send">send</button>
+            </section>
+        </fieldset>
+    </div>
+    <div id="amqQueueBtn_div" style="display: none;" class="demo_container">
+        <h2>/amq/queue demo</h2>
+        <fieldset>
+            <legend>设置订阅地址</legend>
+            <section>
+                <label>订阅地址：</label>
+                <select id="subscribe-uri">
+                    <option value="/amq/queue/ws.rabbit.amq.queue.destination">
+                        /amq/queue/ws.rabbit.amq.queue.destination
+                    </option>
+                </select>
+                <button id="subscribe">订阅</button>
+            </section>
+        </fieldset>
+        <fieldset>
+            <legend>直接发送到MQ</legend>
+            <section>
+                <em>用来测试将消息发送到mq，各个客户端的接收情况</em><br>
+                <label>routing key：</label>
+                <select id="routingKey">
+                    <option></option>
+                </select>
+                <label>消息内容：</label>
+                <input id="contentMq" style="width: 40%;"/>
+                <button id="send2mq">发送到mq</button>
+            </section>
+        </fieldset>
+        <fieldset>
+            <legend>发送消息</legend>
+            <section>
+                <label>消息内容：</label>
+                <input id="content" style="width: 100%; height: 50px;"/>
+                <button id="send">send</button>
+            </section>
+        </fieldset>
+    </div>
+    <div id="topicBtn_div" style="display: none;" class="demo_container">
+        <h2>/topic demo</h2>
+        <fieldset>
+            <legend>设置订阅地址</legend>
+            <section>
+                <label>订阅地址：</label>
+                <select id="subscribe-uri">
+                    <option></option>
+                    <option value="/topic/*.debug.*">
+                        /topic/*.debug.*
+                    </option>
+                    <option value="/topic/*.info.*">
+                        /topic/*.info.*
+                    </option>
+                </select>
+                <button id="subscribe">订阅</button>
+            </section>
+        </fieldset>
+        <fieldset>
+            <legend>直接发送到MQ</legend>
+            <section>
+                <em>用来测试将消息发送到mq，各个客户端的接收情况</em><br>
+                <label>routing key：</label>
+                <select id="routingKey">
+                    <option></option>
+                    <option value="*.info.*">*.info.*</option>
+                    <option value="*.debug.*">*.debug.*</option>
+                </select>
+                <label>消息内容：</label>
+                <input id="contentMq" style="width: 40%;"/>
+                <button id="send2mq">发送到mq</button>
+            </section>
+        </fieldset>
+        <fieldset>
+            <legend>发送消息</legend>
+            <section>
+                <label>消息内容：</label>
+                <input id="content" style="width: 100%; height: 50px;"/>
+                <button id="send1">send2debug</button>
+                <button id="send2">send2info</button>
+            </section>
+        </fieldset>
+    </div>
     <fieldset>
-        <legend>直接发送到MQ</legend>
-        <section>
-            <em>用来测试将消息发送到mq，各个客户端的接收情况</em><br>
-            <label>routing key：</label>
-            <select id="routingKey">
-                <option></option>
-                <option value="animal.#">animal.#</option>
-                <option value="animal.*">animal.*</option>
-            </select>
-            <label>消息内容：</label>
-            <input id="contentMq" style="width: 40%;"/>
-            <button id="send2mq">发送到mq</button>
-        </section>
-    </fieldset>
-    <fieldset>
-        <legend>发送消息</legend>
-        <section>
-            <label>消息内容：</label>
-            <input id="content" style="width: 100%; height: 50px;"/>
-            <button id="send1">send2mifei</button>
-            <button id="send2">send2peppa</button>
-            <br>
-            <label>收到的消息：</label>
-            <div id="message" style="border: 1px solid #eee;min-height: 100px;background-color: #eee"></div>
-        </section>
-    </fieldset>
-    <fieldset>
+        <label>收到的消息：</label>
+        <div id="message" style="border: 1px solid #eee;min-height: 100px;background-color: #eee"></div>
         <legend>收到的错误信息</legend>
         <section>
             <label>错误信息：</label>
@@ -72,20 +198,54 @@
 <!--sockjs-client-->
 <script src="https://cdn.bootcss.com/sockjs-client/1.4.0/sockjs.js"></script>
 <script type="application/javascript">
-    var ws;
     $(function () {
+        var ws;
+        var exchangeBtn = $('#exchangeBtn');
+        var queueBtn = $('#queueBtn');
+        var amqQueueBtn = $('#amqQueueBtn');
+        var topicBtn = $('#topicBtn');
+        var exchangeBtn_div = $('#exchangeBtn_div');
+        var queueBtn_div = $('#queueBtn_div');
+        var amqQueueBtn_div = $('#amqQueueBtn_div');
+        var topicBtn_div = $('#topicBtn_div');
+
         var $connect = $('#connect');
-        var $subscribeUri = $('#subscribe-uri');
-        var $subscribe = $('#subscribe');
-        var $send1 = $('#send1');
-        var $send2 = $('#send2');
         var $message = $('#message');
         var $content = $('#content');
         var $error = $('#error');
-        var $routingKey = $('#routingKey');
-        var $contentMq = $('#contentMq');
-        var $send2mq = $('#send2mq');
         var connected = false;
+
+        exchangeBtn.click(function () {
+            exchangeBtn_div.css('display', 'block');
+            queueBtn_div.css('display', 'none');
+            amqQueueBtn_div.css('display', 'none');
+            topicBtn_div.css('display', 'none');
+            reset(exchangeBtn_div);
+            registerEvent(exchangeBtn_div, 1);
+        });
+        queueBtn.click(function () {
+            exchangeBtn_div.css('display', 'none');
+            queueBtn_div.css('display', 'block');
+            amqQueueBtn_div.css('display', 'none');
+            topicBtn_div.css('display', 'none');
+            reset(queueBtn_div);
+            registerEvent(queueBtn_div, 2);
+        });
+        amqQueueBtn.click(function () {
+            exchangeBtn_div.css('display', 'none');
+            queueBtn_div.css('display', 'none');
+            amqQueueBtn_div.css('display', 'block');
+            topicBtn_div.css('display', 'none');
+            registerEvent(amqQueueBtn_div, 3);
+        });
+        topicBtn.click(function () {
+            exchangeBtn_div.css('display', 'none');
+            queueBtn_div.css('display', 'none');
+            amqQueueBtn_div.css('display', 'none');
+            topicBtn_div.css('display', 'block');
+            reset(topicBtn_div);
+            registerEvent(topicBtn_div, 4);
+        });
 
         $connect.click(function () {
             if (connected) {
@@ -95,41 +255,64 @@
             }
         });
 
-        $subscribe.click(function () {
-            if ($subscribeUri.val())
-                showMessage('已经订阅：' + $subscribeUri.val());
-            // 订阅聊天内容
-            ws.subscribe($subscribeUri.val(), function (data) {
-                showMessage(data.body);
+        function registerEvent(div, type) {
+            div.find('#subscribe').click(function () {
+                let su = div.find('#subscribe-uri').val();
+                if (su) {
+                    showMessage('已经订阅：' + su);
+                    // 订阅聊天内容
+                    ws.subscribe(su, function (data) {
+                        showMessage(data.body);
+                    });
+                }
             });
-        });
 
-        $send1.click(function () {
-            if ($content.val())
-                send1();
-        });
+            div.find('#send').click(function () {
+                if (div.find('#content').val()) {
+                    if (type === 2) {
+                        ws.send('/app/queue', {}, div.find('#content').val());
+                    } else if (type === 3) {
+                        ws.send('/app/amq/queue', {}, div.find('#content').val());
+                    }
+                }
+            });
 
-        $send2.click(function () {
-            if ($content.val())
-                send2();
-        });
+            div.find('#send1').click(function () {
+                if (div.find('#content').val()) {
+                    if (type === 1) {
+                        ws.send('/app/send2mifei', {}, div.find('#content').val());
+                    } else if (type === 4) {
+                        ws.send('/app/topic/debug', {}, div.find('#content').val());
+                    }
+                }
+            });
 
-        $send2mq.click(function () {
-            if ($contentMq.val())
-                $.post('/send2mq', {
-                    routingkey: $routingKey.val(),
-                    content: $contentMq.val()
-                }, function (d) {
-                    console.log(d);
-                });
-        });
+            div.find('#send2').click(function () {
+                if (div.find('#content').val()) {
+                    if (type === 1) {
+                        ws.send('/app/send2peppa', {}, div.find('#content').val());
+                    } else if (type === 4) {
+                        ws.send('/app/topic/info', {}, div.find('#content').val());
+                    }
+                }
+            });
 
-        function send1() {
-            ws.send('/app/send2mifei', {}, $content.val());
+            div.find('#send2mq').click(function () {
+                let contentMq = div.find('#contentMq').val();
+                if (contentMq)
+                    $.post('/send2mq', {
+                        routingkey: div.find('#routingKey').val(),
+                        content: contentMq,
+                        type: type
+                    }, function (d) {
+                        console.log(d);
+                    });
+            });
         }
 
-        function send2() {
-            ws.send('/app/send2peppa', {}, $content.val());
+        function reset(div) {
+            $message.text('');
+            $error.text('');
         }
 
         function connect() {
@@ -159,10 +342,8 @@
         function setConnected(b) {
             connected = b;
             if (b) {
-                $subscribe.removeAttr('disabled');
                 $connect.text('退出');
             } else {
-                $subscribe.attr('disabled', true);
                 $connect.text('连接');
             }
         }
