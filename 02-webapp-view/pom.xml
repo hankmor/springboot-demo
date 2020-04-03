@@ -9,7 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>02-webapp-view</artifactId>
+    <artifactId>springboot-webapp-view</artifactId>
+    <name>springboot :: webapp-view</name>
 
     <dependencies>
         <dependency>
@@ -49,4 +50,13 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

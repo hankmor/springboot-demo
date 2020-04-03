@@ -8,7 +8,8 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>12-amqp</artifactId>
+    <artifactId>springboot-amqp</artifactId>
+    <name>springboot :: amqp</name>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
@@ -24,4 +25,13 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
