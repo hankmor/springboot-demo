@@ -17,12 +17,13 @@
         <module>09-druid-mybatis-fastjson</module>
         <module>10-redisson</module>
         <module>11-quartz</module>
-        <module>common</module>
         <module>12-amqp</module>
         <module>13-websocket</module>
+        <module>14-docker</module>
+        <module>99-common</module>
     </modules>
     <packaging>pom</packaging>
-    <name>springboot-demo</name>
+    <name>springboot :: demo</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
@@ -43,13 +44,4 @@
             <version>1.16.22</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
