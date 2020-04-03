@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.belonk</groupId>
-    <artifactId>11-quartz</artifactId>
+    <artifactId>springboot-quartz</artifactId>
+    <name>springboot :: quartz</name>
     <version>0.0.1-SNAPSHOT</version>
-    <name>11-quartz</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -52,5 +52,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -9,7 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>03-spring-data-jpa</artifactId>
+    <artifactId>springboot-spring-data-jpa</artifactId>
+    <name>springboot :: spring-data-jpa</name>
 
     <dependencies>
         <dependency>
@@ -51,4 +52,13 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
