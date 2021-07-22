@@ -13,11 +13,6 @@
     <name>springboot :: shiro</name>
 
     <dependencies>
-        <dependency>
-            <groupId>com.belonk</groupId>
-            <artifactId>common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <!--swagger2-->
         <dependency>
             <groupId>io.springfox</groupId>

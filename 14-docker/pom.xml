@@ -13,6 +13,12 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <!--docker仓库，可以使用nexus作为docker注册中心-->
+        <docker.registry>http://localhost:8080/nexus</docker.registry>
+        <!--远程docker地址，需要能够访问远程docker-->
+        <docker.host>http://192.168.0.16:2376</docker.host>
+        <!--工程的端口，用于暴露docker端口以供访问-->
+        <project.port>8080</project.port>
     </properties>
 
     <dependencies>
@@ -42,6 +48,60 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.2</version>
+                <configuration>
+                    <!--镜像名称，一般格式为：docker仓库/[目录]/包名称 -->
+                    <imageName>${docker.registry}/abc/${project.artifactId}</imageName>
+                    <!--基础镜像-->
+                    <baseImage>openjdk:8-jdk-alpine</baseImage>
+                    <!--维护人员信息-->
+                    <maintainer>sam koobyte@126.com</maintainer>
+                    <!--执行入口-->
+                    <entryPoint>["java", "-jar", "${project.artifactId}-${project.version}.jar"]</entryPoint>
+                    <skipDockerBuild>false</skipDockerBuild>
+                    <!--push到仓库-->
+                    <pushImage>true</pushImage>
+                    <!--settings.xml配合的docker仓库服务id-->
+                    <serverId>nexus</serverId>
+                    <!--docker仓库地址-->
+                    <registryUrl>${docker.registry}</registryUrl>
+                    <!--push失败重试次数-->
+                    <retryPushCount>0</retryPushCount>
+                    <!--使用远程的docker，需要开启端口-->
+                    <dockerHost>${docker.host}</dockerHost>
+                    <!--修复docker时区不正确的问题-->
+                    <runs>
+                        <run>echo 'Asia/Shanghai' > /etc/timezone</run>
+                    </runs>
+                    <!--暴露的端口信息-->
+                    <exposes>
+                        <expose>${project.port}</expose>
+                    </exposes>
+                    <!-- copy the service's jar file from target into the root directory of the image -->
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.artifactId}-${project.version}.jar</include>
+                        </resource>
+                        <!--修复docker时区不正确的问题-->
+                        <resource>
+                            <targetPath>/usr/share/zoneinfo/Asia/</targetPath>
+                            <directory>/usr/share/zoneinfo/Asia</directory>
+                            <include>Shanghai</include>
+                        </resource>
+                    </resources>
+                    <!-- optionally overwrite tags every time image is built with docker:build -->
+                    <forceTags>true</forceTags>
+                    <!-- <imageTags>-->
+                    <!--     <imageTag>${project.version}</imageTag>-->
+                    <!--     <imageTag>latest</imageTag>-->
+                    <!-- </imageTags>-->
+                </configuration>
             </plugin>
         </plugins>
     </build>
